@@ -14,6 +14,15 @@ target/
 .settings/
 .metadata/
 .vscode/
+.factorypath
+
+# NetBeans Specific
+nbproject/private/
+build/
+dist/
+nbbuild/
+nbdist/
+.nb-gradle/
 
 # Local Servers & Tooling (Do not push heavy binaries to Git)
 apache-maven-*/
@@ -23,6 +32,10 @@ apache-tomcat-*/
 .DS_Store
 Thumbs.db
 *.log
+*.tmp
+*.temp
+*.swp
+*~
 
 # Local Scripts
 kill_ports.sh

@@ -204,11 +204,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Revenue Chart
-    const months = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
-    // Default beautiful mock growth data
-    const revenueData = [12000000, 18000000, 15000000, 26000000, 24000000, 35000000, 31000000, 42000000, 48000000, 45000000, 56000000, 68000000];
-    
     // Dynamic database values from controller
     const revenueByMonth = [
         <c:forEach var="row" items="${revenueByMonth}" varStatus="s">
@@ -216,12 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
         </c:forEach>
     ];
     
-    // Override fake data with real database records
-    revenueByMonth.forEach(r => { 
-        if (r.month >= 1 && r.month <= 12) {
-            revenueData[r.month - 1] = r.revenue; 
-        }
-    });
+    const months = revenueByMonth.map(r => 'T' + r.month);
+    const revenueData = revenueByMonth.map(r => r.revenue);
 
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     const gradient = revenueCtx.createLinearGradient(0, 0, 0, 300);

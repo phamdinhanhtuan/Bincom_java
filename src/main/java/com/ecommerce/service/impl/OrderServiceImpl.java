@@ -249,11 +249,12 @@ public class OrderServiceImpl implements OrderService {
         List<Object[]> data = orderRepository.revenueByMonth(year);
         if (data == null || data.isEmpty()) {
             data = new java.util.ArrayList<>();
-            long[] mockOrderCounts = {15, 22, 18, 30, 25, 42, 35, 40, 50, 48, 60, 75};
-            double[] mockRevenues = {12000000.0, 18000000.0, 15000000.0, 26000000.0, 24000000.0, 35000000.0, 31000000.0, 42000000.0, 48000000.0, 45000000.0, 56000000.0, 68000000.0};
-            for (int i = 0; i < 12; i++) {
+            int[] mockMonths = {2, 3, 4, 5, 6};
+            long[] mockOrderCounts = {15, 12, 21, 19, 23};
+            double[] mockRevenues = {18000000.0, 15000000.0, 26000000.0, 24000000.0, 34990000.0};
+            for (int i = 0; i < 5; i++) {
                 data.add(new Object[] {
-                    i + 1,
+                    mockMonths[i],
                     new java.math.BigDecimal(mockRevenues[i]),
                     mockOrderCounts[i]
                 });

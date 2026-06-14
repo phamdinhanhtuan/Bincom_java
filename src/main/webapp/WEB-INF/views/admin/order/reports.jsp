@@ -81,53 +81,55 @@
 </div>
 
 <script>
-const labels = [
-    <c:forEach var="row" items="${month > 0 ? revenueByDay : revenueByMonth}" varStatus="s">
-        '${month > 0 ? "Ngày ".concat(row[0]) : "T".concat(row[0])}'${!s.last ? ',' : ''}
-    </c:forEach>
-];
-const revenues = [
-    <c:forEach var="row" items="${month > 0 ? revenueByDay : revenueByMonth}" varStatus="s">
-        ${row[1]}${!s.last ? ',' : ''}
-    </c:forEach>
-];
+document.addEventListener('DOMContentLoaded', function() {
+    const labels = [
+        <c:forEach var="row" items="${month > 0 ? revenueByDay : revenueByMonth}" varStatus="s">
+            '${month > 0 ? "Ngày ".concat(row[0]) : "T".concat(row[0])}'${!s.last ? ',' : ''}
+        </c:forEach>
+    ];
+    const revenues = [
+        <c:forEach var="row" items="${month > 0 ? revenueByDay : revenueByMonth}" varStatus="s">
+            ${row[1]}${!s.last ? ',' : ''}
+        </c:forEach>
+    ];
 
-const ctx = document.getElementById('revenueChart').getContext('2d');
-const grad = ctx.createLinearGradient(0, 0, 0, 350);
-grad.addColorStop(0, 'rgba(108,99,255,0.5)');
-grad.addColorStop(1, 'rgba(108,99,255,0)');
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 350);
+    grad.addColorStop(0, 'rgba(13, 148, 136, 0.4)'); // Emerald green gradient
+    grad.addColorStop(1, 'rgba(13, 148, 136, 0)');
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels,
-        datasets: [{
-            label: 'Doanh thu (₫)',
-            data: revenues,
-            backgroundColor: grad,
-            borderColor: '#6c63ff',
-            borderWidth: 2,
-            borderRadius: 6
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: ctx => ctx.parsed.y.toLocaleString('vi-VN') + '₫'
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Doanh thu (₫)',
+                data: revenues,
+                backgroundColor: grad,
+                borderColor: '#0d9488',
+                borderWidth: 2,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ctx.parsed.y.toLocaleString('vi-VN') + '₫'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => (v/1000000).toFixed(0) + 'M₫' }
                 }
             }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: { callback: v => (v/1000000).toFixed(0) + 'M₫' }
-            }
         }
-    }
+    });
 });
 </script>
 

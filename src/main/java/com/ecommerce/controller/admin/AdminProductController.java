@@ -159,4 +159,15 @@ public class AdminProductController {
             return new org.springframework.http.ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/{id}/delete-thumbnail")
+    @ResponseBody
+    public org.springframework.http.ResponseEntity<String> deleteThumbnail(@PathVariable Long id) {
+        try {
+            productService.deleteProductThumbnail(id);
+            return new org.springframework.http.ResponseEntity<>("OK", org.springframework.http.HttpStatus.OK);
+        } catch (Exception e) {
+            return new org.springframework.http.ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

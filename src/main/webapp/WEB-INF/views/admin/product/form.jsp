@@ -208,20 +208,25 @@
                 </div>
                 <div class="card-body">
                     <!-- Thumbnail preview -->
-                    <c:choose>
-                        <c:when test="${not empty product.thumbnailUrl}">
-                            <img id="thumbImg"
-                                 src="${pageContext.request.contextPath}${product.thumbnailUrl}"
-                                 class="thumb-preview">
-                        </c:when>
-                        <c:otherwise>
-                            <div class="thumb-placeholder" id="thumbPlaceholder">
-                                <i class="bi bi-image-fill"></i>
-                                <p>Click để chọn ảnh chính</p>
-                            </div>
-                            <img id="thumbImg" src="" class="thumb-preview" style="display:none;">
-                        </c:otherwise>
-                    </c:choose>
+                    <div id="thumbContainer" style="position: relative;">
+                        <c:choose>
+                            <c:when test="${not empty product.thumbnailUrl}">
+                                <img id="thumbImg"
+                                     src="${pageContext.request.contextPath}${product.thumbnailUrl}"
+                                     class="thumb-preview">
+                                <button type="button" class="delete-btn" style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" onclick="deleteThumbnail(${product.id})" title="Xóa ảnh đại diện">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="thumb-placeholder" id="thumbPlaceholder">
+                                    <i class="bi bi-image-fill"></i>
+                                    <p>Click để chọn ảnh chính</p>
+                                </div>
+                                <img id="thumbImg" src="" class="thumb-preview" style="display:none;">
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
                     <!-- Upload zone thumbnail -->
                     <div class="upload-zone">
@@ -399,6 +404,42 @@ function deleteExistingImage(imageId) {
     })
     .catch(error => {
         alert('Lỗi khi xóa ảnh: ' + error);
+    });
+}
+
+function deleteThumbnail(productId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa ảnh đại diện này không?')) return;
+    
+    const csrfHeader = document.querySelector("meta[name='_csrf_header']")?.getAttribute("content") || "X-CSRF-TOKEN";
+    const csrfToken = document.querySelector("meta[name='_csrf']")?.getAttribute("content");
+    
+    const headers = {};
+    if (csrfToken) {
+        headers[csrfHeader] = csrfToken;
+    }
+    
+    fetch(window.CTX + '/admin/products/' + productId + '/delete-thumbnail', {
+        method: 'POST',
+        headers: headers
+    })
+    .then(response => {
+        if (response.ok) {
+            const container = document.getElementById('thumbContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="thumb-placeholder" id="thumbPlaceholder">
+                        <i class="bi bi-image-fill"></i>
+                        <p>Click để chọn ảnh chính</p>
+                    </div>
+                    <img id="thumbImg" src="" class="thumb-preview" style="display:none;">
+                `;
+            }
+        } else {
+            response.text().then(text => alert('Lỗi khi xóa ảnh đại diện: ' + text));
+        }
+    })
+    .catch(error => {
+        alert('Lỗi khi xóa ảnh đại diện: ' + error);
     });
 }
 </script>

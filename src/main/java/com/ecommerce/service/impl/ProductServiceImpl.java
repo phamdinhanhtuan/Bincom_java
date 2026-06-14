@@ -251,4 +251,15 @@ public class ProductServiceImpl implements ProductService {
             session.delete(img);
         }
     }
+
+    @Override
+    public void deleteProductThumbnail(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
+        if (product.getThumbnailUrl() != null && !product.getThumbnailUrl().isEmpty()) {
+            fileUploadUtil.deleteFile(product.getThumbnailUrl());
+            product.setThumbnailUrl(null);
+            productRepository.update(product);
+        }
+    }
 }

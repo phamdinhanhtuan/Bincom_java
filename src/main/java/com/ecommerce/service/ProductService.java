@@ -23,4 +23,5 @@ public interface ProductService {
     List<Object[]> findBestSelling(int limit);
     long countActiveProducts();
     void deleteProductImage(Long imageId);
+    void deleteProductThumbnail(Long id);
 }

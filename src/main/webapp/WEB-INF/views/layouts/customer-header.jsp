@@ -127,7 +127,7 @@
           </li>
         </sec:authorize>
         <sec:authorize access="isAuthenticated()">
-          <sec:authorize access="hasRole('CUSTOMER')">
+          <sec:authorize access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')">
             <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
               <a href="${pageContext.request.contextPath}/orders" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Tra cứu trạng thái và lịch sử các đơn hàng đã đặt">
                 <i class="bi bi-receipt" style="color:#0d9488; font-size:16px;"></i> Đơn hàng
@@ -270,7 +270,7 @@
       </div>
 
       <sec:authorize access="isAuthenticated()">
-        <sec:authorize access="hasRole('CUSTOMER')">
+        <sec:authorize access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')">
           <a href="${pageContext.request.contextPath}/orders" class="nav-action-btn">
             <i class="bi bi-receipt"></i>
             <span class="nav-action-label">Đơn hàng</span>

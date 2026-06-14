@@ -371,25 +371,34 @@ function deleteExistingImage(imageId) {
     if (!confirm('Bạn có chắc chắn muốn xóa ảnh này không?')) return;
     
     // Fetch CSRF Token
-    const csrfHeader = $("meta[name='_csrf_header']").attr("content") || "X-CSRF-TOKEN";
-    const csrfToken = $("meta[name='_csrf']").attr("content");
+    const csrfHeader = document.querySelector("meta[name='_csrf_header']")?.getAttribute("content") || "X-CSRF-TOKEN";
+    const csrfToken = document.querySelector("meta[name='_csrf']")?.getAttribute("content");
     
-    $.ajax({
-        url: window.CTX + '/admin/products/images/' + imageId + '/delete',
-        type: 'POST',
-        beforeSend: function(xhr) {
-            if (csrfToken) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    if (csrfToken) {
+        headers[csrfHeader] = csrfToken;
+    }
+    
+    fetch(window.CTX + '/admin/products/images/' + imageId + '/delete', {
+        method: 'POST',
+        headers: headers
+    })
+    .then(response => {
+        if (response.ok) {
+            const container = document.getElementById('img-container-' + imageId);
+            if (container) {
+                container.style.transition = 'opacity 0.3s';
+                container.style.opacity = '0';
+                setTimeout(() => container.remove(), 300);
             }
-        },
-        success: function(response) {
-            $('#img-container-' + imageId).fadeOut(300, function() {
-                $(this).remove();
-            });
-        },
-        error: function(xhr) {
-            alert('Lỗi khi xóa ảnh: ' + xhr.responseText);
+        } else {
+            response.text().then(text => alert('Lỗi khi xóa ảnh: ' + text));
         }
+    })
+    .catch(error => {
+        alert('Lỗi khi xóa ảnh: ' + error);
     });
 }
 </script>

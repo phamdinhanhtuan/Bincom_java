@@ -43,10 +43,10 @@
         <intercept-url pattern="/tracking" access="permitAll"/>
         <intercept-url pattern="/cart"     access="permitAll"/>
         <intercept-url pattern="/cart/**"  access="permitAll"/>
-        <intercept-url pattern="/checkout" access="hasRole('CUSTOMER')"/>
-        <intercept-url pattern="/checkout/**" access="hasRole('CUSTOMER')"/>
-        <intercept-url pattern="/orders/**"   access="hasRole('CUSTOMER')"/>
-        <intercept-url pattern="/account/**"  access="hasRole('CUSTOMER')"/>
+        <intercept-url pattern="/checkout" access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
+        <intercept-url pattern="/checkout/**" access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
+        <intercept-url pattern="/orders/**"   access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
+        <intercept-url pattern="/account/**"  access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
         <form-login login-page="/login"
                     login-processing-url="/login"
                     default-target-url="/shop"

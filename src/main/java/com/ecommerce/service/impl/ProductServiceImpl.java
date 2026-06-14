@@ -124,6 +124,17 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
+            org.hibernate.Session session = sessionFactory.getCurrentSession();
+            Long orderCount = (Long) session.createQuery("select count(oi) from OrderItem oi where oi.product.id = :productId")
+                .setParameter("productId", id)
+                .uniqueResult();
+            
+            if (orderCount > 0) {
+                product.setActive(false);
+                productRepository.update(product);
+                throw new RuntimeException("Sản phẩm đã tồn tại trong lịch sử mua hàng. Hệ thống đã tự động chuyển trạng thái của sản phẩm sang 'Ngừng kinh doanh' để bảo toàn dữ liệu hóa đơn.");
+            }
+
             if (product.getThumbnailUrl() != null && !product.getThumbnailUrl().isEmpty()) {
                 fileUploadUtil.deleteFile(product.getThumbnailUrl());
             }

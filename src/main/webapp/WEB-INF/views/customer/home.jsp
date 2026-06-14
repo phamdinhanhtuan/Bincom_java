@@ -179,7 +179,7 @@
   </section>
 
   <!-- HERO SIDE BANNER (Right Column) -->
-  <a href="${pageContext.request.contextPath}/shop?categoryId=5" class="hero-side-banner" title="Xem tất cả sản phẩm Mỹ phẩm & Làm đẹp chính hãng tại Bincom Beauty">
+  <a href="${pageContext.request.contextPath}/shop?categoryId=6" class="hero-side-banner" title="Xem tất cả sản phẩm Mỹ phẩm & Làm đẹp chính hãng tại Bincom Beauty">
     <div class="hero-side-content">
       <h3 class="hero-side-title">Mỹ phẩm & Làm đẹp</h3>
       <p class="hero-side-desc">Chăm sóc da chuyên sâu - Đẹp rạng ngời</p>

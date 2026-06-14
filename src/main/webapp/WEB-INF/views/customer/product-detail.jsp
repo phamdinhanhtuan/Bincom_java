@@ -67,9 +67,20 @@
                     </a>
                 </div>
 
-                <h1 style="font-size:24px; font-weight:800; color:var(--primary); margin-bottom:12px; line-height:1.3;">
-                    ${product.name}
-                </h1>
+                <div class="d-flex align-items-center justify-content-between gap-3 mb-3 flex-wrap">
+                    <h1 style="font-size:24px; font-weight:800; color:var(--primary); margin:0; line-height:1.3;">
+                        ${product.name}
+                    </h1>
+                    <sec:authorize access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF')">
+                        <a href="${pageContext.request.contextPath}/admin/products/${product.id}/edit" 
+                           style="display:inline-flex; align-items:center; gap:6px; background:#0d9488; color:white; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; transition: all 0.2s; border: none; cursor: pointer;"
+                           onmouseover="this.style.background='#0f766e'"
+                           onmouseout="this.style.background='#0d9488'"
+                           title="Chỉnh sửa nhanh sản phẩm này trong trang Admin">
+                            <i class="bi bi-pencil-square"></i> Sửa sản phẩm
+                        </a>
+                    </sec:authorize>
+                </div>
 
                 <!-- Price Section -->
                 <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">

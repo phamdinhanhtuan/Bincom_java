@@ -83,9 +83,16 @@
         <h5>${empty product.id ? 'Thêm sản phẩm mới' : 'Chỉnh sửa: '}${product.name}</h5>
         <p>${empty product.id ? 'Điền đầy đủ thông tin để thêm sản phẩm mới' : 'Cập nhật thông tin sản phẩm #'}${product.productCode}</p>
     </div>
-    <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Quay lại
-    </a>
+    <div class="d-flex gap-2">
+        <c:if test="${not empty product.id}">
+            <a href="${pageContext.request.contextPath}/shop/product/${product.id}" class="btn btn-outline-primary" target="_blank">
+                <i class="bi bi-eye me-1"></i>Xem trên cửa hàng
+            </a>
+        </c:if>
+        <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Quay lại
+        </a>
+    </div>
 </div>
 
 <c:choose>

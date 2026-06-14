@@ -1,0 +1,29 @@
+# Maven Build Output
+target/
+*.war
+*.jar
+*.zip
+*.tar.gz
+
+# IDE Specific Files
+.idea/
+*.iml
+*.iws
+.project
+.classpath
+.settings/
+.metadata/
+.vscode/
+
+# Local Servers & Tooling (Do not push heavy binaries to Git)
+apache-maven-*/
+apache-tomcat-*/
+
+# System Files
+.DS_Store
+Thumbs.db
+*.log
+
+# Local Scripts
+kill_ports.sh
+run.sh

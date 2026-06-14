@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- ===== Component Scan (exclude controllers) ===== -->
+    <context:component-scan base-package="com.ecommerce">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- ===== Properties File ===== -->
+    <context:property-placeholder location="/WEB-INF/spring/db.properties"/>
+
+    <!-- ===== DataSource (HikariCP) ===== -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="jdbcUrl"         value="${db.url}"/>
+        <property name="username"        value="${db.username}"/>
+        <property name="password"        value="${db.password}"/>
+        <property name="maximumPoolSize" value="10"/>
+        <property name="minimumIdle"     value="2"/>
+        <property name="connectionTimeout" value="30000"/>
+        <property name="idleTimeout"     value="600000"/>
+        <property name="maxLifetime"     value="1800000"/>
+    </bean>
+
+    <!-- ===== Hibernate Session Factory ===== -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.ecommerce.model"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ===== Transaction Manager ===== -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- ===== File Upload ===== -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/><!-- 10MB -->
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- ===== Email ===== -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <property name="port" value="${mail.port}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.ssl.trust">${mail.host}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ===== Message Source (i18n) ===== -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+</beans>

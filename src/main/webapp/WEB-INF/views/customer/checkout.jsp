@@ -4,6 +4,17 @@
 <c:set var="pageTitle" value="Thanh toán — Bincom" scope="request"/>
 <%@ include file="/WEB-INF/views/layouts/customer-header.jsp" %>
 
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+</style>
+
 <div class="breadcrumb-wrap">
   <div class="kumo-container">
     <nav class="breadcrumb">
@@ -103,9 +114,9 @@
           <div id="couponMsg" style="font-size:13px;margin-top:8px;"></div>
         </div>
 
-        <button type="submit" class="btn-primary"
+        <button type="submit" id="btnSubmitOrder" class="btn-primary"
                 style="width:100%;justify-content:center;padding:18px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#6c63ff,#4f46e5);border:none;border-radius:14px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:opacity .2s;"
-                onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+                onmouseover="if(!this.disabled) this.style.opacity='.88'" onmouseout="if(!this.disabled) this.style.opacity='1'">
           <i class="bi bi-bag-check-fill"></i> Đặt hàng ngay
         </button>
       </form>
@@ -196,6 +207,18 @@ function applyCoupon() {
     msg.style.color = 'var(--danger)';
   }
 }
+
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+  var btn = document.getElementById('btnSubmitOrder');
+  if (btn.disabled) {
+    e.preventDefault();
+    return;
+  }
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  btn.style.cursor = 'not-allowed';
+  btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> Đang xử lý đơn hàng...';
+});
 </script>
 
 <%@ include file="/WEB-INF/views/layouts/customer-footer.jsp" %>

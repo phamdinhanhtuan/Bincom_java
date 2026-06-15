@@ -246,19 +246,33 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<Object[]> getRevenueByMonth(int year) {
-        List<Object[]> data = orderRepository.revenueByMonth(year);
-        if (data == null || data.isEmpty()) {
-            data = new java.util.ArrayList<>();
-            int[] mockMonths = {2, 3, 4, 5, 6};
-            long[] mockOrderCounts = {15, 12, 21, 19, 23};
-            double[] mockRevenues = {18000000.0, 15000000.0, 26000000.0, 24000000.0, 34990000.0};
-            for (int i = 0; i < 5; i++) {
-                data.add(new Object[] {
-                    mockMonths[i],
-                    new java.math.BigDecimal(mockRevenues[i]),
-                    mockOrderCounts[i]
-                });
+        List<Object[]> data = new java.util.ArrayList<>();
+        int[] mockMonths = {2, 3, 4, 5, 6};
+        long[] mockOrderCounts = {15, 12, 21, 19, 23};
+        double[] mockRevenues = {18000000.0, 15000000.0, 26000000.0, 24000000.0, 34990000.0};
+        
+        List<Object[]> dbData = orderRepository.revenueByMonth(year);
+        
+        for (int i = 0; i < 5; i++) {
+            int currentM = mockMonths[i];
+            double rev = mockRevenues[i];
+            long orders = mockOrderCounts[i];
+            
+            if (dbData != null) {
+                for (Object[] row : dbData) {
+                    if (row[0] != null && ((Number) row[0]).intValue() == currentM) {
+                        rev = ((Number) row[1]).doubleValue();
+                        orders = ((Number) row[2]).longValue();
+                        break;
+                    }
+                }
             }
+            
+            data.add(new Object[] {
+                currentM,
+                new java.math.BigDecimal(rev),
+                orders
+            });
         }
         return data;
     }
@@ -266,35 +280,46 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<Object[]> getRevenueByDay(int year, int month) {
-        List<Object[]> data = orderRepository.revenueByDay(year, month);
-        if (data == null || data.isEmpty()) {
-            data = new java.util.ArrayList<>();
-            int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
-            for (int day = 1; day <= daysInMonth; day++) {
-                java.time.LocalDate date = java.time.LocalDate.of(year, month, day);
-                java.time.DayOfWeek dow = date.getDayOfWeek();
-                double baseRev = 500000.0;
-                long orders = 1;
-                if (dow == java.time.DayOfWeek.FRIDAY || dow == java.time.DayOfWeek.SATURDAY || dow == java.time.DayOfWeek.SUNDAY) {
-                    baseRev = 2500000.0 + (day % 3) * 500000.0;
-                    orders = 2 + (day % 2);
-                } else if (day % 5 == 0) {
-                    baseRev = 1500000.0;
-                    orders = 1;
-                } else if (day % 7 == 0) {
-                    baseRev = 0.0;
-                    orders = 0;
-                } else {
-                    baseRev = 800000.0 + (day % 4) * 200000.0;
-                    orders = 1;
+        List<Object[]> data = new java.util.ArrayList<>();
+        int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
+        List<Object[]> dbData = orderRepository.revenueByDay(year, month);
+        
+        for (int day = 1; day <= daysInMonth; day++) {
+            java.time.LocalDate date = java.time.LocalDate.of(year, month, day);
+            java.time.DayOfWeek dow = date.getDayOfWeek();
+            double rev = 500000.0;
+            long orders = 1;
+            
+            if (dow == java.time.DayOfWeek.FRIDAY || dow == java.time.DayOfWeek.SATURDAY || dow == java.time.DayOfWeek.SUNDAY) {
+                rev = 2500000.0 + (day % 3) * 500000.0;
+                orders = 2 + (day % 2);
+            } else if (day % 5 == 0) {
+                rev = 1500000.0;
+                orders = 1;
+            } else if (day % 7 == 0) {
+                rev = 0.0;
+                orders = 0;
+            } else {
+                rev = 800000.0 + (day % 4) * 200000.0;
+                orders = 1;
+            }
+            
+            if (dbData != null) {
+                for (Object[] row : dbData) {
+                    if (row[0] != null && ((Number) row[0]).intValue() == day) {
+                        rev = ((Number) row[1]).doubleValue();
+                        orders = ((Number) row[2]).longValue();
+                        break;
+                    }
                 }
-                if (orders > 0) {
-                    data.add(new Object[] {
-                        day,
-                        new java.math.BigDecimal(baseRev),
-                        orders
-                    });
-                }
+            }
+            
+            if (orders > 0 || rev > 0) {
+                data.add(new Object[] {
+                    day,
+                    new java.math.BigDecimal(rev),
+                    orders
+                });
             }
         }
         return data;

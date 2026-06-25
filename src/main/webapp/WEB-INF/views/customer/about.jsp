@@ -10,7 +10,7 @@
       <div style="text-align: center; margin-bottom: 40px;">
         <span style="font-size: 48px;">🛍️</span>
         <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 38px; font-weight: 800; color: #0f172a; margin-top: 16px;">
-          Giới thiệu về <span style="color: #2563eb;">Bincom</span>
+          Giới thiệu về <span style="color: #0d9488;">Bincom</span>
         </h1>
         <p style="font-size: 16px; color: #64748b; margin-top: 8px; font-weight: 500;">
           Hệ thống mua sắm trực tuyến thông minh, tin cậy và tiện lợi.
@@ -45,7 +45,7 @@
         </div>
 
         <p style="text-align: center; margin-top: 40px;">
-          <a href="${pageContext.request.contextPath}/shop" class="btn-primary" style="background:#2563eb; color: white; border: none; font-size: 14px; padding: 14px 32px; border-radius: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; text-decoration:none; box-shadow: 0 4px 14px rgba(37,99,235,0.35);">
+          <a href="${pageContext.request.contextPath}/shop" class="btn-primary" style="background:#0d9488; color: white; border: none; font-size: 14px; padding: 14px 32px; border-radius: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; text-decoration:none; box-shadow: 0 4px 14px rgba(13,148,136,0.35);">
             <i class="bi bi-cart-fill"></i> Bắt đầu mua sắm ngay
           </a>
         </p>

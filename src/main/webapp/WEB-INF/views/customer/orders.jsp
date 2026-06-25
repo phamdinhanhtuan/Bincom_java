@@ -4,15 +4,7 @@
 <c:set var="pageTitle" value="Đơn hàng của tôi — Bincom" scope="request"/>
 <%@ include file="/WEB-INF/views/layouts/customer-header.jsp" %>
 
-<div class="breadcrumb-wrap">
-  <div class="kumo-container">
-    <nav class="breadcrumb">
-      <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-      <span class="breadcrumb-sep">/</span>
-      <span>Đơn hàng của tôi</span>
-    </nav>
-  </div>
-</div>
+
 
 <div class="kumo-container" style="padding-top:60px;padding-bottom:80px;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;">
@@ -41,7 +33,7 @@
                 <div>
                   <div style="font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;">Mã đơn hàng</div>
                   <div style="font-weight:700;font-size:14px;">
-                    <a href="${pageContext.request.contextPath}/orders/${order.orderCode}" style="color:#2563eb;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#1d4ed8'" onmouseout="this.style.color='#2563eb'">
+                    <a href="${pageContext.request.contextPath}/orders/${order.orderCode}" style="color:#0d9488;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#0f766e'" onmouseout="this.style.color='#0d9488'">
                       ${order.orderCode}
                     </a>
                   </div>
@@ -60,8 +52,8 @@
 
               <div style="display:flex;align-items:center;gap:12px;">
                 <span style="padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.5px;
-                  background:${order.status == 'COMPLETED' ? '#f0fdf4' : order.status == 'CANCELLED' ? '#fef2f2' : order.status == 'SHIPPING' ? '#eff6ff' : '#fffbeb'};
-                  color:${order.status == 'COMPLETED' ? '#16a34a' : order.status == 'CANCELLED' ? '#dc2626' : order.status == 'SHIPPING' ? '#2563eb' : '#d97706'};">
+                  background:${order.status == 'COMPLETED' ? '#f0fdf4' : order.status == 'CANCELLED' ? '#fef2f2' : order.status == 'SHIPPING' ? '#f0fdfa' : '#fffbeb'};
+                  color:${order.status == 'COMPLETED' ? '#16a34a' : order.status == 'CANCELLED' ? '#dc2626' : order.status == 'SHIPPING' ? '#0d9488' : '#d97706'};">
                   <c:choose>
                     <c:when test="${order.status == 'PENDING'}">⏳ Chờ xác nhận</c:when>
                     <c:when test="${order.status == 'CONFIRMED'}">✅ Đã xác nhận</c:when>
@@ -92,7 +84,7 @@
               </c:forEach>
               <c:if test="${order.orderItems.size() > 2}">
                 <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">
-                  <a href="${pageContext.request.contextPath}/orders/${order.orderCode}" style="color:#2563eb;text-decoration:none;font-weight:500;">
+                  <a href="${pageContext.request.contextPath}/orders/${order.orderCode}" style="color:#0d9488;text-decoration:none;font-weight:500;">
                     +${order.orderItems.size() - 2} sản phẩm khác...
                   </a>
                 </div>

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class InventoryServiceImpl implements InventoryService {
 
     @Autowired private InventoryRepository inventoryRepository;
+    @Autowired private com.ecommerce.repository.ProductRepository productRepository;
 
     @Override
     public Inventory updateStock(Long productId, int quantity, int reorderLevel) {
@@ -24,6 +25,9 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setQuantityInStock(quantity);
         inventory.setReorderLevel(reorderLevel);
         if (opt.isEmpty()) {
+            com.ecommerce.model.Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+            inventory.setProduct(product);
             return inventoryRepository.save(inventory);
         }
         return inventoryRepository.update(inventory);

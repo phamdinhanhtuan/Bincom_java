@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
@@ -6,397 +6,577 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${pageTitle != null ? pageTitle : 'Bincom — Mua sắm thông minh'}</title>
-  <meta name="description" content="${metaDescription != null ? metaDescription : 'Mua sắm trực tuyến thời trang, điện tử, gia dụng chất lượng cao tại Bincom'}">
-  <meta name="keywords" content="Bincom, điện tử Bincom, thời trang Bincom, đồ dùng gia đình, mỹ phẩm chính hãng, mua sắm online, mua sắm thông minh">
-  <meta name="robots" content="index, follow">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="${pageTitle != null ? pageTitle : 'Bincom — Mua sắm thông minh'}">
-  <meta property="og:description" content="${metaDescription != null ? metaDescription : 'Mua sắm trực tuyến thời trang, điện tử, gia dụng chất lượng cao tại Bincom'}">
-  <meta property="og:image" content="${pageContext.request.contextPath}/resources/images/logo.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- ===== SEO PRIMARY ===== -->
+  <title>${pageTitle != null ? pageTitle : 'Bincom — Điện thoại, Laptop, Phụ kiện chính hãng'}</title>
+  <meta name="description" content="${metaDescription != null ? metaDescription : 'Mua điện thoại, laptop, tablet, phụ kiện công nghệ chính hãng tại Bincom. Giá tốt nhất, bảo hành chính hãng, giao hàng toàn quốc.'}">
+  <meta name="keywords"    content="${metaKeywords   != null ? metaKeywords   : 'điện thoại chính hãng, mua iphone, samsung galaxy, laptop giá rẻ, phụ kiện công nghệ, Bincom'}">
+  <meta name="robots"      content="index, follow, max-snippet:-1, max-image-preview:large">
+  <meta name="author"      content="Bincom E-Commerce">
+  <link rel="canonical"    href="${pageContext.request.requestURL}">
+
+  <!-- ===== OPEN GRAPH (Facebook / Zalo) ===== -->
+  <meta property="og:type"        content="website">
+  <meta property="og:locale"      content="vi_VN">
+  <meta property="og:site_name"   content="Bincom">
+  <meta property="og:title"       content="${pageTitle != null ? pageTitle : 'Bincom — Điện thoại, Laptop, Phụ kiện chính hãng'}">
+  <meta property="og:description" content="${metaDescription != null ? metaDescription : 'Mua điện thoại, laptop, phụ kiện công nghệ chính hãng tại Bincom. Giá tốt, bảo hành chính hãng.'}">
+  <meta property="og:image"       content="${pageContext.request.contextPath}/resources/images/logo.png">
+  <meta property="og:url"         content="${pageContext.request.requestURL}">
+
+  <!-- ===== TWITTER CARD ===== -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="${pageTitle != null ? pageTitle : 'Bincom'}">
+  <meta name="twitter:description" content="${metaDescription != null ? metaDescription : 'Mua sắm điện thoại, laptop chính hãng tại Bincom'}">
+  <meta name="twitter:image"       content="${pageContext.request.contextPath}/resources/images/logo.png">
+
+  <!-- ===== STRUCTURED DATA (JSON-LD) ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Bincom",
+    "url": "${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}",
+    "logo": "${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}/resources/images/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "1800-1234",
+      "contactType": "customer service",
+      "areaServed": "VN",
+      "availableLanguage": "Vietnamese"
+    },
+    "sameAs": ["https://facebook.com/bincom","https://instagram.com/bincom"]
+  }
+  </script>
+
+  <!-- ===== BREADCRUMB JSON-LD (dynamic, populated per page via model attr) ===== -->
+  <c:if test="${not empty breadcrumbs}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      <c:forEach var="bc" items="${breadcrumbs}" varStatus="st">
+      {"@type":"ListItem","position":${st.index+1},"name":"${bc.name}","item":"${bc.url}"}<c:if test="${!st.last}">,</c:if>
+      </c:forEach>
+    ]
+  }
+  </script>
+  </c:if>
+
+  <!-- ===== PRECONNECT / PERFORMANCE ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+  <!-- ===== FONTS ===== -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- ===== FONTS & STYLES ===== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/shop.css">
-  <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/images/favicon.png?v=1.0.2">
-  <meta name="_csrf" content="${_csrf.token}"/>
-  <meta name="_csrf_header" content="${_csrf.headerName}"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- ===== MAIN CSS ===== -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/shop.css?v=1.2">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/landing.css?v=1.2">
+
+  <!-- ===== FAVICON ===== -->
+  <link rel="icon"             type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resources/images/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180"  href="${pageContext.request.contextPath}/resources/images/favicon.png">
+
+  <!-- ===== CSRF META ===== -->
+  <meta name="_csrf"        content="${_csrf.token}">
+  <meta name="_csrf_header" content="${_csrf.headerName}">
+
+  <!-- ===== GLOBAL JS CONTEXT ===== -->
   <script>window.CTX = '${pageContext.request.contextPath}';</script>
 </head>
 <body>
 
-<!-- SIDE DRAWER OVERLAY -->
-<div id="sideDrawerOverlay" onclick="toggleDrawer()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; opacity:0; transition: opacity 0.3s ease;"></div>
+<!-- ============================================================
+     MOBILE DRAWER OVERLAY
+     ============================================================ -->
+<div id="cps-overlay" class="cps-overlay" onclick="cpsCloseDrawer()" aria-hidden="true"></div>
 
-<!-- SIDE DRAWER (Mobile) -->
-<div id="sideDrawer" style="position:fixed; top:0; left:-320px; width:320px; height:100%; background:#f0fdfa; z-index:2001; box-shadow:5px 0 30px rgba(0,0,0,0.15); transition: left 0.3s ease; display:flex; flex-direction:column; overflow-y:auto; font-family:'Plus Jakarta Sans', sans-serif;">
-  <div style="padding:24px 20px; border-bottom:1px solid rgba(13,148,136,0.15); display:flex; align-items:center; justify-content:space-between; background:#e6f4f1;">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom Logo" style="height:28px; width:auto; object-fit:contain;">
-    </div>
-    <button onclick="toggleDrawer()" style="background:none; border:none; font-size:24px; color:#0f766e; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+<!-- ============================================================
+     MOBILE SIDE DRAWER
+     ============================================================ -->
+<nav id="cps-drawer" class="cps-drawer" aria-label="Menu điều hướng di động">
+  <!-- Drawer Header -->
+  <div class="cps-drawer-head">
+    <a href="${pageContext.request.contextPath}/home" aria-label="Trang chủ Bincom">
+      <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom Logo" class="cps-drawer-logo">
+    </a>
+    <button class="cps-drawer-close" onclick="cpsCloseDrawer()" aria-label="Đóng menu">
       <i class="bi bi-x-lg"></i>
     </button>
   </div>
 
-  <div style="padding:20px; display:flex; flex-direction:column; gap:20px;">
-    <!-- Nhóm 1: Hệ thống bán lẻ Bincom -->
-    <div>
-      <h4 style="font-size:11px; text-transform:uppercase; color:#0f766e; letter-spacing:1px; margin-bottom:8px; font-weight:700; opacity:0.8;">Hệ thống Bincom</h4>
-      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column;">
-        <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-          <a href="${pageContext.request.contextPath}/home" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Quay lại Trang chủ Bincom E-Commerce">
-            <i class="bi bi-house-door-fill" style="color:#0d9488; font-size:16px;"></i> Trang Chủ
-          </a>
-        </li>
-        <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-          <a href="${pageContext.request.contextPath}/about" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Tìm hiểu thông tin giới thiệu về Tập đoàn công nghệ và bán lẻ Bincom">
-            <i class="bi bi-building-fill" style="color:#0d9488; font-size:16px;"></i> Về Bincom
-          </a>
-        </li>
-        <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-            <a href="${pageContext.request.contextPath}/shop" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none; flex-grow:1;" title="Xem tất cả danh mục sản phẩm chính hãng tại Cửa hàng Bincom">
-              <i class="bi bi-bag-fill" style="color:#0d9488; font-size:16px;"></i> Cửa hàng (Sản phẩm)
-            </a>
-            <button onclick="toggleDrawerSubmenu(event)" style="background:none; border:none; color:#0f766e; padding:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-              <i id="drawerSubmenuIcon" class="bi bi-chevron-down" style="font-size:14px; transition: transform 0.25s ease;"></i>
-            </button>
-          </div>
-          <!-- Accordion Submenu -->
-          <ul id="drawerSubmenuList" style="list-style:none; padding:0 0 10px 28px; margin:0; display:none; flex-direction:column; gap:8px; animation: submenuFadeIn 0.25s ease;">
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=1" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem các sản phẩm Điện thoại & Thiết bị công nghệ số chính hãng">
-                <i class="bi bi-phone" style="font-size:14px;"></i> Điện thoại & Thiết bị
-              </a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=2" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem sản phẩm Thời trang nam nữ và phụ kiện hàng hiệu">
-                <i class="bi bi-gem" style="font-size:14px;"></i> Thời trang & Phụ kiện
-              </a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=3" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem sản phẩm Đồ dùng gia đình và thiết bị thông minh tiện lợi">
-                <i class="bi bi-house" style="font-size:14px;"></i> Đồ dùng gia đình
-              </a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=4" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem Sách kỹ năng, sách văn học và văn phòng phẩm chất lượng">
-                <i class="bi bi-book" style="font-size:14px;"></i> Sách & Văn phòng
-              </a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=5" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem sản phẩm Thể thao, dụng cụ tập luyện và đồ dùng du lịch">
-                <i class="bi bi-dribbble" style="font-size:14px;"></i> Thể thao & Du lịch
-              </a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/shop?categoryId=6" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:500; color:#475569; padding:6px 0;" title="Xem sản phẩm Mỹ phẩm và sản phẩm chăm sóc da mặt chính hãng">
-                <i class="bi bi-magic" style="font-size:14px;"></i> Mỹ phẩm & Làm đẹp
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-          <a href="${pageContext.request.contextPath}/cart" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Kiểm tra thông tin các sản phẩm đã chọn trong Giỏ hàng của bạn">
-            <i class="bi bi-cart-fill" style="color:#0d9488; font-size:16px;"></i> Giỏ hàng
-          </a>
-        </li>
-        <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-          <a href="${pageContext.request.contextPath}/contact" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Liên hệ và đóng góp ý kiến phản hồi cho bộ phận hỗ trợ khách hàng Bincom">
-            <i class="bi bi-telephone-fill" style="color:#0d9488; font-size:16px;"></i> Liên Hệ
-          </a>
-        </li>
-      </ul>
-    </div>
- 
-    <!-- Nhóm 3: Thông tin & Tài khoản -->
-    <div>
-      <h4 style="font-size:11px; text-transform:uppercase; color:#0f766e; letter-spacing:1px; margin-bottom:8px; font-weight:700; opacity:0.8;">Thông tin tài khoản</h4>
-      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column;">
-        <sec:authorize access="!isAuthenticated()">
-          <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-            <a href="${pageContext.request.contextPath}/login" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Đăng nhập tài khoản thành viên để mua sắm và nhận ưu đãi">
-              <i class="bi bi-box-arrow-in-right" style="color:#0d9488; font-size:16px;"></i> Đăng nhập
-            </a>
-          </li>
-          <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-            <a href="${pageContext.request.contextPath}/register" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Đăng ký tài khoản thành viên mới tại Bincom E-Commerce">
-              <i class="bi bi-person-plus-fill" style="color:#0d9488; font-size:16px;"></i> Đăng ký
-            </a>
-          </li>
-        </sec:authorize>
-        <sec:authorize access="isAuthenticated()">
-          <sec:authorize access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')">
-            <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-              <a href="${pageContext.request.contextPath}/orders" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Tra cứu trạng thái và lịch sử các đơn hàng đã đặt">
-                <i class="bi bi-receipt" style="color:#0d9488; font-size:16px;"></i> Đơn hàng
-              </a>
-            </li>
-            <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-              <a href="${pageContext.request.contextPath}/account" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#0f172a; text-decoration:none;" title="Quản lý và thay đổi thông tin cá nhân tài khoản của bạn">
-                <i class="bi bi-person-fill" style="color:#0d9488; font-size:16px;"></i> Tài khoản
-              </a>
-            </li>
-          </sec:authorize>
-          <li style="border-bottom:1px solid rgba(13,148,136,0.1);">
-            <form action="${pageContext.request.contextPath}/logout" method="post" style="margin:0; display:block; width:100%;">
-              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-              <button type="submit" style="display:flex; align-items:center; gap:12px; padding:12px 0; font-size:14px; font-weight:600; color:#ef4444; background:none; border:none; width:100%; text-align:left; cursor:pointer; font-family:inherit;">
-                <i class="bi bi-box-arrow-right" style="color:#ef4444; font-size:16px;"></i> Đăng xuất
-              </button>
-            </form>
-          </li>
-        </sec:authorize>
-      </ul>
-    </div>
+  <!-- Search inside drawer -->
+  <div class="cps-drawer-search">
+    <form action="${pageContext.request.contextPath}/shop" method="get" role="search">
+      <label for="drawerSearch" class="sr-only">Tìm kiếm sản phẩm</label>
+      <input id="drawerSearch" type="search" name="keyword" value="${keyword}" placeholder="Tìm điện thoại, laptop...">
+      <button type="submit" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
   </div>
 
-  <div style="margin-top:auto; padding:20px; background:#e6f4f1; border-top:1px solid rgba(13,148,136,0.15); font-size:12px; color:#0f766e; opacity:0.8;">
-    <div>Hotline: <strong style="color:#0f172a;">1800 1234</strong></div>
-    <div>Email: <strong style="color:#0f172a;">support@bincom.vn</strong></div>
+  <!-- Drawer Menu -->
+  <div class="cps-drawer-menu">
+    <div class="cps-drawer-section-title">Danh mục sản phẩm</div>
+    <ul class="cps-drawer-list">
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=1" title="Điện thoại smartphone chính hãng tại Bincom">
+          <span class="cps-drawer-icon cps-icon-blue"><i class="bi bi-phone-fill"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Điện thoại &amp; Thiết bị</strong>
+            <small>Smartphone, Tablet, Phụ kiện</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=2" title="Thời trang phụ kiện chính hãng tại Bincom">
+          <span class="cps-drawer-icon cps-icon-purple"><i class="bi bi-gem"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Thời trang &amp; Phụ kiện</strong>
+            <small>Quần áo, Giày dép, Trang sức</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=3" title="Đồ dùng gia đình thông minh tại Bincom">
+          <span class="cps-drawer-icon cps-icon-green"><i class="bi bi-house-heart-fill"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Đồ dùng gia đình</strong>
+            <small>Gia dụng thông minh, Nhà bếp</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=4" title="Sách và văn phòng phẩm tại Bincom">
+          <span class="cps-drawer-icon cps-icon-orange"><i class="bi bi-book-fill"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Sách &amp; Văn phòng</strong>
+            <small>Sách kỹ năng, Thiết bị văn phòng</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=5" title="Thể thao du lịch tại Bincom">
+          <span class="cps-drawer-icon cps-icon-teal"><i class="bi bi-bicycle"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Thể thao &amp; Du lịch</strong>
+            <small>Dụng cụ thể thao, Cắm trại</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=6" title="Mỹ phẩm làm đẹp chính hãng tại Bincom">
+          <span class="cps-drawer-icon cps-icon-pink"><i class="bi bi-stars"></i></span>
+          <span class="cps-drawer-text">
+            <strong>Mỹ phẩm &amp; Làm đẹp</strong>
+            <small>Chăm sóc da, Trang điểm</small>
+          </span>
+          <i class="bi bi-chevron-right cps-drawer-arrow"></i>
+        </a>
+      </li>
+    </ul>
+
+    <div class="cps-drawer-divider"></div>
+    <div class="cps-drawer-section-title">Trang chính</div>
+    <ul class="cps-drawer-list cps-drawer-list-plain">
+      <li><a href="${pageContext.request.contextPath}/home"   title="Trang chủ Bincom"><i class="bi bi-house-door"></i> Trang Chủ</a></li>
+      <li><a href="${pageContext.request.contextPath}/shop"   title="Cửa hàng Bincom"><i class="bi bi-shop"></i> Cửa Hàng</a></li>
+      <li><a href="${pageContext.request.contextPath}/about"  title="Giới thiệu Bincom"><i class="bi bi-info-circle"></i> Về Bincom</a></li>
+      <li><a href="${pageContext.request.contextPath}/contact" title="Liên hệ hỗ trợ Bincom"><i class="bi bi-headset"></i> Hỗ Trợ</a></li>
+    </ul>
+
+    <div class="cps-drawer-divider"></div>
+    <div class="cps-drawer-section-title">Tài khoản</div>
+    <ul class="cps-drawer-list cps-drawer-list-plain">
+      <sec:authorize access="!isAuthenticated()">
+        <li><a href="${pageContext.request.contextPath}/login"    title="Đăng nhập tài khoản Bincom"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</a></li>
+        <li><a href="${pageContext.request.contextPath}/register" title="Đăng ký tài khoản mới Bincom"><i class="bi bi-person-plus"></i> Đăng ký</a></li>
+      </sec:authorize>
+      <sec:authorize access="isAuthenticated()">
+        <li><a href="${pageContext.request.contextPath}/account" title="Tài khoản của tôi"><i class="bi bi-person-circle"></i> Tài khoản của tôi</a></li>
+        <li><a href="${pageContext.request.contextPath}/orders"  title="Đơn hàng của tôi"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</a></li>
+        <li>
+          <form action="${pageContext.request.contextPath}/logout" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+            <button type="submit" class="cps-drawer-logout"><i class="bi bi-power"></i> Đăng xuất</button>
+          </form>
+        </li>
+      </sec:authorize>
+    </ul>
   </div>
-</div>
 
-<!-- TOP BAR (Promo/Announce) -->
-<div class="top-bar">
-  <span>
-    🚚 Miễn phí vận chuyển cho đơn hàng từ 500K &nbsp;|&nbsp; Hotline hỗ trợ: 1800 1234 &nbsp;|&nbsp;
-    <sec:authorize access="!isAuthenticated()">
-      <a href="${pageContext.request.contextPath}/login" style="color:#fff;font-weight:700;text-decoration:underline;">Đăng nhập</a>
-      &nbsp;/&nbsp;
-      <a href="${pageContext.request.contextPath}/register" style="color:#fff;font-weight:700;text-decoration:underline;">Đăng ký</a>
-    </sec:authorize>
-    <sec:authorize access="isAuthenticated()">
-      Xin chào, <strong style="color:#93c5fd;"><sec:authentication property="principal.username"/></strong>
-    </sec:authorize>
-  </span>
-</div>
+  <!-- Drawer Hotline -->
+  <div class="cps-drawer-foot">
+    <a href="tel:18001234" class="cps-drawer-hotline">
+      <i class="bi bi-telephone-fill"></i>
+      <div>
+        <span>Hotline hỗ trợ</span>
+        <strong>1800 1234</strong>
+      </div>
+    </a>
+  </div>
+</nav>
 
-<!-- MAIN NAVBAR (TGDD layout) -->
-<nav class="kumo-navbar">
-  <div class="nav-inner">
-    <!-- Logo & Mobile menu button -->
-    <div style="display:flex; align-items:center; gap:10px;">
-      <button onclick="toggleDrawer()" style="font-size:24px; color:#0f172a; background:none; border:none; cursor:pointer; display:none;" class="mobile-menu-trigger">
-        <i class="bi bi-list"></i>
-      </button>
-      <a href="${pageContext.request.contextPath}/home" class="nav-logo" style="display:flex; align-items:center; text-decoration:none;">
-        <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom Logo" style="height:38px; width:auto; object-fit:contain;">
+<!-- ============================================================
+     PROMO TOP BAR
+     ============================================================ -->
+<div class="cps-topbar" role="banner">
+  <div class="cps-topbar-inner">
+    <div class="cps-topbar-left">
+      <a href="tel:18001234" title="Gọi hotline Bincom miễn phí">
+        <i class="bi bi-telephone-fill"></i> 1800 1234
       </a>
+      <span class="cps-topbar-sep">|</span>
+      <a href="${pageContext.request.contextPath}/contact" title="Liên hệ hỗ trợ khách hàng">
+        <i class="bi bi-headset"></i> Hỗ trợ 24/7
+      </a>
+      <!-- Hidden SEO links for breadcrumb signals -->
+      <span class="sr-only">
+        <a href="${pageContext.request.contextPath}/shop?categoryId=1">Mua điện thoại chính hãng</a>
+        <a href="${pageContext.request.contextPath}/shop?categoryId=2">Thời trang online giá rẻ</a>
+      </span>
     </div>
+    <div class="cps-topbar-center">
+      <span class="cps-topbar-promo">🔥 Flash Sale: Giảm đến 40% — Chỉ hôm nay!</span>
+    </div>
+    <div class="cps-topbar-right">
+      <span>Hệ thống bán lẻ chính hãng Bincom</span>
+    </div>
+  </div>
+</div>
 
-    <!-- Search Bar in Center -->
-    <div class="nav-search">
+<!-- ============================================================
+     MAIN NAVBAR — CellphoneS Style
+     ============================================================ -->
+<header class="cps-header" itemscope itemtype="https://schema.org/SiteNavigationElement">
+  <div class="cps-header-inner">
+
+    <!-- Hamburger (mobile) -->
+    <button class="cps-hamburger" onclick="cpsOpenDrawer()" aria-label="Mở menu điều hướng" aria-expanded="false" aria-controls="cps-drawer">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Logo -->
+    <a href="${pageContext.request.contextPath}/home" class="cps-logo" itemprop="url" title="Bincom — Trang chủ mua sắm trực tuyến" aria-label="Bincom trang chủ">
+      <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom - Mua sắm điện thoại, laptop chính hãng" itemprop="image" width="140" height="40">
+    </a>
+
+    <!-- Search Bar (Desktop) -->
+    <div class="cps-searchbar" role="search">
       <form action="${pageContext.request.contextPath}/shop" method="get">
-        <input type="text" name="keyword" value="${keyword}" placeholder="Bạn tìm gì hôm nay? (Điện thoại, áo thun, đồ gia dụng...)">
-        <button type="submit">
-          <i class="bi bi-search"></i>
+        <label for="mainSearch" class="sr-only">Tìm kiếm sản phẩm tại Bincom</label>
+        <div class="cps-search-wrap">
+          <input id="mainSearch" type="search" name="keyword" value="${keyword}"
+                 placeholder="Tìm điện thoại, laptop, phụ kiện..."
+                 autocomplete="off" aria-label="Tìm kiếm sản phẩm">
+          <!-- Search suggestions dropdown (populate via JS) -->
+          <div class="cps-search-suggest" id="searchSuggest" role="listbox" aria-label="Gợi ý tìm kiếm"></div>
+        </div>
+        <button type="submit" class="cps-search-btn" aria-label="Tìm kiếm">
+          <i class="bi bi-search"></i> <span>Tìm kiếm</span>
         </button>
       </form>
     </div>
 
-    <!-- Actions (TGDD icons & labels) -->
-    <div class="nav-actions">
-      <!-- Product Dropdown Menu Wrapper -->
-      <div class="nav-action-dropdown-wrap desktop-only">
-        <button class="nav-action-btn" id="productMenuBtn" onclick="toggleProductDropdown(event)" style="background:none; border:none; padding:6px 12px; font-family:inherit;">
-          <i class="bi bi-grid"></i>
-          <span class="nav-action-label" style="display:flex; align-items:center; gap:2px;">
-            Sản phẩm <i class="bi bi-chevron-down" style="font-size:10px;"></i>
-          </span>
-        </button>
-        <div class="nav-product-dropdown" id="productDropdownMenu">
-          <div class="dropdown-arrow"></div>
-          <div class="dropdown-header">
-            <i class="bi bi-tag-fill" style="color:var(--accent);"></i> DANH MỤC SẢN PHẨM
-          </div>
-          <div class="dropdown-grid">
-            <a href="${pageContext.request.contextPath}/shop?categoryId=1" class="dropdown-item" title="Điện thoại di động, máy tính bảng và phụ kiện số chính hãng tại Bincom">
-              <div class="item-icon" style="background:#eff6ff; color:#3b82f6;"><i class="bi bi-phone"></i></div>
-              <div class="item-info">
-                <span class="item-title">Điện thoại & Thiết bị</span>
-                <span class="item-desc">Smartphones, Tablet, Phụ kiện</span>
-              </div>
+    <!-- Header Actions -->
+    <div class="cps-header-actions">
+      <!-- Wishlist -->
+      <a href="#" onclick="openWishlistModal(event)" class="cps-action-btn cps-wishlist-btn" title="Danh sách yêu thích của bạn" aria-label="Yêu thích" style="margin-right: 8px;">
+        <div class="cps-action-icon">
+          <i class="bi bi-heart"></i>
+          <span class="cps-cart-badge" id="wishlistBadge" style="background-color: var(--cps-orange); display: none;">0</span>
+        </div>
+        <span class="cps-action-label">Yêu thích</span>
+      </a>
+
+      <!-- Cart -->
+      <a href="${pageContext.request.contextPath}/cart" class="cps-action-btn cps-cart-btn" title="Giỏ hàng của bạn" aria-label="Giỏ hàng">
+        <div class="cps-action-icon">
+          <i class="bi bi-cart3"></i>
+          <span class="cps-cart-badge" id="cartBadge" aria-live="polite">0</span>
+        </div>
+        <span class="cps-action-label">Giỏ hàng</span>
+      </a>
+
+      <!-- Account -->
+      <sec:authorize access="!isAuthenticated()">
+        <a href="${pageContext.request.contextPath}/login" class="cps-action-btn" title="Đăng nhập tài khoản Bincom" aria-label="Đăng nhập">
+          <div class="cps-action-icon"><i class="bi bi-person"></i></div>
+          <span class="cps-action-label">Đăng nhập</span>
+        </a>
+      </sec:authorize>
+      <sec:authorize access="isAuthenticated()">
+        <div class="cps-account-wrap">
+          <button class="cps-action-btn cps-account-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu tài khoản">
+            <div class="cps-action-icon"><i class="bi bi-person-circle"></i></div>
+            <span class="cps-action-label"><sec:authentication property="principal.username"/></span>
+          </button>
+          <div class="cps-account-dropdown" role="menu">
+            <a href="${pageContext.request.contextPath}/account" role="menuitem" title="Thông tin tài khoản">
+              <i class="bi bi-person-lines-fill"></i> Tài khoản của tôi
             </a>
-            <a href="${pageContext.request.contextPath}/shop?categoryId=2" class="dropdown-item" title="Thời trang nam nữ, phụ kiện và trang sức cao cấp tại Bincom">
-              <div class="item-icon" style="background:#faf5ff; color:#a855f7;"><i class="bi bi-gem"></i></div>
-              <div class="item-info">
-                <span class="item-title">Thời trang & Phụ kiện</span>
-                <span class="item-desc">Quần áo thời trang, Phụ kiện</span>
-              </div>
+            <a href="${pageContext.request.contextPath}/orders" role="menuitem" title="Lịch sử đơn hàng">
+              <i class="bi bi-bag-check-fill"></i> Đơn hàng của tôi
             </a>
-            <a href="${pageContext.request.contextPath}/shop?categoryId=3" class="dropdown-item" title="Thiết bị thông minh, đồ dùng gia đình và nhà bếp tiện nghi tại Bincom">
-              <div class="item-icon" style="background:#ecfdf5; color:#10b981;"><i class="bi bi-house"></i></div>
-              <div class="item-info">
-                <span class="item-title">Đồ dùng gia đình</span>
-                <span class="item-desc">Gia dụng thông minh, Đồ bếp</span>
-              </div>
-            </a>
-            <a href="${pageContext.request.contextPath}/shop?categoryId=4" class="dropdown-item" title="Sách hay, văn phòng phẩm và dụng cụ học tập chất lượng tại Bincom">
-              <div class="item-icon" style="background:#fff7ed; color:#f97316;"><i class="bi bi-book"></i></div>
-              <div class="item-info">
-                <span class="item-title">Sách & Văn phòng</span>
-                <span class="item-desc">Sách kỹ năng, Thiết bị văn phòng</span>
-              </div>
-            </a>
-            <a href="${pageContext.request.contextPath}/shop?categoryId=5" class="dropdown-item" title="Dụng cụ thể thao, đồ dã ngoại và cắm trại ngoài trời tại Bincom">
-              <div class="item-icon" style="background:#f0fdfa; color:#14b8a6;"><i class="bi bi-dribbble"></i></div>
-              <div class="item-info">
-                <span class="item-title">Thể thao & Du lịch</span>
-                <span class="item-desc">Dụng cụ tập luyện, Đồ dã ngoại</span>
-              </div>
-            </a>
-            <a href="${pageContext.request.contextPath}/shop?categoryId=6" class="dropdown-item" title="Mỹ phẩm chính hãng, sản phẩm chăm sóc da và làm đẹp tại Bincom">
-              <div class="item-icon" style="background:#fff1f2; color:#f43f5e;"><i class="bi bi-magic"></i></div>
-              <div class="item-info">
-                <span class="item-title">Mỹ phẩm & Làm đẹp</span>
-                <span class="item-desc">Chăm sóc da, Trang điểm</span>
-              </div>
-            </a>
+            <div class="cps-dropdown-divider"></div>
+            <form action="${pageContext.request.contextPath}/logout" method="post">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+              <button type="submit" role="menuitem" class="cps-dropdown-logout">
+                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+              </button>
+            </form>
           </div>
         </div>
-      </div>
-      <a href="${pageContext.request.contextPath}/about" class="nav-action-btn desktop-only" title="Tìm hiểu về Tập đoàn công nghệ và bán lẻ Bincom">
-        <i class="bi bi-building"></i>
-        <span class="nav-action-label">Về Bincom</span>
-      </a>
-
-      <!-- Hidden SEO Anchor Links on Main Header -->
-      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
-        <a href="${pageContext.request.contextPath}/shop?categoryId=1" title="Điện thoại & Thiết bị số chính hãng tại Bincom">Điện thoại Bincom chính hãng</a>
-        <a href="${pageContext.request.contextPath}/shop?categoryId=2" title="Thời trang & Phụ kiện hàng hiệu tại Bincom">Thời trang & Phụ kiện Bincom</a>
-        <a href="${pageContext.request.contextPath}/shop?categoryId=3" title="Thiết bị thông minh & Đồ dùng gia đình Bincom">Thiết bị thông minh gia đình Bincom</a>
-      </div>
-
-      <sec:authorize access="isAuthenticated()">
-        <sec:authorize access="hasAnyRole('CUSTOMER','ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')">
-          <a href="${pageContext.request.contextPath}/orders" class="nav-action-btn">
-            <i class="bi bi-receipt"></i>
-            <span class="nav-action-label">Đơn hàng</span>
-          </a>
-          <a href="${pageContext.request.contextPath}/account" class="nav-action-btn">
-            <i class="bi bi-person"></i>
-            <span class="nav-action-label">Tài khoản</span>
-          </a>
-        </sec:authorize>
       </sec:authorize>
-      <a href="${pageContext.request.contextPath}/cart" class="nav-action-btn nav-cart-btn" id="cartBtn">
-        <i class="bi bi-cart3"></i>
-        <span class="nav-action-label">Giỏ hàng</span>
-        <span class="cart-count" id="cartBadge">0</span>
+
+      <!-- Mobile Search Toggle -->
+      <button class="cps-mobile-search-btn" onclick="cpsMobileSearch()" aria-label="Tìm kiếm">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Search Bar (hidden by default) -->
+  <div class="cps-mobile-searchbar" id="mobileSearchbar">
+    <form action="${pageContext.request.contextPath}/shop" method="get" role="search">
+      <label for="mobileSearch" class="sr-only">Tìm kiếm sản phẩm</label>
+      <input id="mobileSearch" type="search" name="keyword" value="${keyword}"
+             placeholder="Tìm điện thoại, laptop..." autocomplete="off">
+      <button type="submit" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+      <button type="button" onclick="cpsMobileSearch()" aria-label="Đóng"><i class="bi bi-x-lg"></i></button>
+    </form>
+  </div>
+</header>
+
+<!-- ============================================================
+     CATEGORY NAVBAR — CellphoneS style horizontal menu
+     ============================================================ -->
+<c:if test="${isHome != 'true'}">
+<nav class="cps-catnav" aria-label="Danh mục sản phẩm" itemscope itemtype="https://schema.org/SiteNavigationElement">
+  <div class="cps-catnav-inner">
+
+    <!-- All products link -->
+    <div class="cps-catnav-item">
+      <a href="${pageContext.request.contextPath}/shop" class="cps-catlink ${empty categoryId ? 'active' : ''}" itemprop="url" title="Tất cả sản phẩm Bincom">
+        <i class="bi bi-grid-fill"></i> <span itemprop="name">Tất cả sản phẩm</span>
       </a>
-      <sec:authorize access="isAuthenticated()">
-        <form action="${pageContext.request.contextPath}/logout" method="post" id="logoutFormHeader" style="display:inline; margin:0;">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-          <button type="submit" class="nav-action-btn" style="background:none; border:none; font-family:inherit;">
-            <i class="bi bi-box-arrow-right"></i>
-            <span class="nav-action-label">Đăng xuất</span>
-          </button>
-        </form>
-      </sec:authorize>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=1"
+         class="cps-catlink ${categoryId == 1 || categoryId == 7 || categoryId == 16 || categoryId == 10 || categoryId == 8 || categoryId == 9 ? 'active' : ''}"
+         itemprop="url" title="Điện thoại và thiết bị số chính hãng tại Bincom">
+        <i class="bi bi-phone-fill"></i>
+        <span itemprop="name">Điện thoại &amp; Thiết bị</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=7" title="Mua smartphone chính hãng"><i class="bi bi-phone"></i> Smartphone</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=16" title="Mua máy tính bảng chính hãng"><i class="bi bi-tablet"></i> Máy tính bảng</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=10" title="Mua tai nghe chính hãng"><i class="bi bi-headphones"></i> Tai nghe &amp; Loa</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=8" title="Mua laptop chính hãng"><i class="bi bi-laptop"></i> Laptop &amp; MacBook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=2"
+         class="cps-catlink ${categoryId == 2 || categoryId == 11 || categoryId == 12 || categoryId == 13 ? 'active' : ''}"
+         itemprop="url" title="Thời trang và phụ kiện cao cấp tại Bincom">
+        <i class="bi bi-gem"></i>
+        <span itemprop="name">Thời trang &amp; Phụ kiện</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=11" title="Mua quần áo thời trang"><i class="bi bi-gender-ambiguous"></i> Quần áo</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=12" title="Mua giày dép thời trang"><i class="bi bi-footprints"></i> Giày dép</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=13" title="Mua trang sức phụ kiện"><i class="bi bi-gift"></i> Phụ kiện thời trang</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=3"
+         class="cps-catlink ${categoryId == 3 || categoryId == 14 || categoryId == 15 ? 'active' : ''}"
+         itemprop="url" title="Đồ dùng gia đình thông minh tại Bincom">
+        <i class="bi bi-house-heart"></i>
+        <span itemprop="name">Đồ dùng gia đình</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=14" title="Đồ dùng gia đình"><i class="bi bi-fire"></i> Đồ dùng gia đình</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=15" title="Thiết bị gia dụng thông minh"><i class="bi bi-cpu"></i> Thiết bị gia dụng</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=4"
+         class="cps-catlink ${categoryId == 4 ? 'active' : ''}"
+         itemprop="url" title="Sách và văn phòng phẩm tại Bincom">
+        <i class="bi bi-book"></i>
+        <span itemprop="name">Sách &amp; Văn phòng</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=4&keyword=Sách" title="Sách kỹ năng cuộc sống"><i class="bi bi-journal-text"></i> Sách kỹ năng</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=4&keyword=Vẽ" title="Thiết bị văn phòng phẩm"><i class="bi bi-printer"></i> Dụng cụ vẽ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=5"
+         class="cps-catlink ${categoryId == 5 ? 'active' : ''}"
+         itemprop="url" title="Thể thao và du lịch tại Bincom">
+        <i class="bi bi-bicycle"></i>
+        <span itemprop="name">Thể thao &amp; Du lịch</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=5" title="Dụng cụ thể thao chính hãng"><i class="bi bi-trophy"></i> Dụng cụ thể thao</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=5&keyword=Xe" title="Đồ cắm trại dã ngoại"><i class="bi bi-compass"></i> Xe đạp dã ngoại</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cps-catnav-item cps-submenu-wrap">
+      <a href="${pageContext.request.contextPath}/shop?categoryId=6"
+         class="cps-catlink ${categoryId == 6 ? 'active' : ''}"
+         itemprop="url" title="Mỹ phẩm và làm đẹp chính hãng tại Bincom">
+        <i class="bi bi-stars"></i>
+        <span itemprop="name">Mỹ phẩm &amp; Làm đẹp</span>
+      </a>
+      <div class="cps-submenu" role="menu">
+        <ul>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=6" title="Mỹ phẩm cao cấp"><i class="bi bi-magic"></i> Mỹ phẩm</a></li>
+          <li><a href="${pageContext.request.contextPath}/shop?categoryId=6&keyword=Serum" title="Chăm sóc da mặt chuyên sâu"><i class="bi bi-heart-pulse"></i> Chăm sóc da</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right side: USPs -->
+    <div class="cps-catnav-usps">
+      <span><i class="bi bi-truck"></i> Miễn phí vận chuyển</span>
+      <span><i class="bi bi-shield-check"></i> Bảo hành chính hãng</span>
+      <span><i class="bi bi-arrow-counterclockwise"></i> Đổi trả 30 ngày</span>
     </div>
   </div>
 </nav>
+</c:if>
 
-<!-- CATEGORY NAVBAR (Horizontal row below main nav - TGDD inspired) -->
-<div class="category-navbar">
-  <div class="category-navbar-inner">
-    <a href="${pageContext.request.contextPath}/shop" class="cat-nav-item ${empty categoryId ? 'active' : ''}">
-      <i class="bi bi-grid-fill"></i>
-      <span>Tất cả</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=1" class="cat-nav-item ${categoryId == 1 ? 'active' : ''}">
-      <i class="bi bi-phone"></i>
-      <span>Điện thoại & Thiết bị</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=2" class="cat-nav-item ${categoryId == 2 ? 'active' : ''}">
-      <i class="bi bi-gem"></i>
-      <span>Thời trang & Phụ kiện</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=3" class="cat-nav-item ${categoryId == 3 ? 'active' : ''}">
-      <i class="bi bi-house"></i>
-      <span>Đồ dùng gia đình</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=4" class="cat-nav-item ${categoryId == 4 ? 'active' : ''}">
-      <i class="bi bi-book"></i>
-      <span>Sách & Văn phòng phẩm</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=5" class="cat-nav-item ${categoryId == 5 ? 'active' : ''}">
-      <i class="bi bi-dribbble"></i>
-      <span>Thể thao & Du lịch</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/shop?categoryId=6" class="cat-nav-item ${categoryId == 6 ? 'active' : ''}">
-      <i class="bi bi-magic"></i>
-      <span>Mỹ phẩm & Làm đẹp</span>
-    </a>
+<!-- ============================================================
+     BREADCRUMB (SEO semantic, shown per page)
+     ============================================================ -->
+<c:if test="${not empty breadcrumbs}">
+<nav class="cps-breadcrumb" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+  <div class="cps-container">
+    <ol>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="${pageContext.request.contextPath}/home" itemprop="item" title="Trang chủ">
+          <span itemprop="name">Trang chủ</span>
+        </a>
+        <meta itemprop="position" content="1">
+        <i class="bi bi-chevron-right"></i>
+      </li>
+      <c:forEach var="bc" items="${breadcrumbs}" varStatus="st">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <c:choose>
+          <c:when test="${st.last}">
+            <span itemprop="name" aria-current="page">${bc.name}</span>
+          </c:when>
+          <c:otherwise>
+            <a href="${bc.url}" itemprop="item" title="${bc.name}">
+              <span itemprop="name">${bc.name}</span>
+            </a>
+            <i class="bi bi-chevron-right"></i>
+          </c:otherwise>
+        </c:choose>
+        <meta itemprop="position" content="${st.index + 2}">
+      </li>
+      </c:forEach>
+    </ol>
   </div>
-</div>
+</nav>
+</c:if>
 
-<!-- Toast Container -->
-<div id="toastContainer"></div>
+<!-- Toast container -->
+<div id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
 
-<!-- CSS inline fixes to hide mobile elements on desktop and show hamburger on mobile -->
-<style>
-  @media(max-width: 768px) {
-    .desktop-only { display: none !important; }
-    .mobile-menu-trigger { display: block !important; }
-  }
-  @keyframes submenuFadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-</style>
-
-<script>
-function toggleDrawer() {
-  var overlay = document.getElementById('sideDrawerOverlay');
-  var drawer = document.getElementById('sideDrawer');
-  if (!drawer || !overlay) return;
-  if (drawer.style.left === '0px') {
-    drawer.style.left = '-320px';
-    overlay.style.opacity = '0';
-    setTimeout(function() { overlay.style.display = 'none'; }, 300);
-  } else {
-    overlay.style.display = 'block';
-    setTimeout(function() { overlay.style.opacity = '1'; }, 10);
-    drawer.style.left = '0px';
-  }
-}
-
-function toggleDrawerSubmenu(e) {
-  if (e) e.stopPropagation();
-  var submenu = document.getElementById('drawerSubmenuList');
-  var icon = document.getElementById('drawerSubmenuIcon');
-  if (submenu) {
-    if (submenu.style.display === 'flex') {
-      submenu.style.display = 'none';
-      icon.style.transform = 'rotate(0deg)';
-    } else {
-      submenu.style.display = 'flex';
-      icon.style.transform = 'rotate(180deg)';
-    }
-  }
-}
-
-function toggleProductDropdown(e) {
-  if (e) e.stopPropagation();
-  var dropdown = document.getElementById('productDropdownMenu');
-  if (dropdown) {
-    dropdown.classList.toggle('active');
-  }
-}
-
-document.addEventListener('click', function(e) {
-  var dropdown = document.getElementById('productDropdownMenu');
-  var btn = document.getElementById('productMenuBtn');
-  if (dropdown && dropdown.classList.contains('active')) {
-    if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
-      dropdown.classList.remove('active');
-    }
-  }
-});
-</script>
-
-<!-- Script -->
+<!-- JS -->
 <script src="${pageContext.request.contextPath}/resources/js/shop.js"></script>
+<script>
+/* ===== CPS DRAWER ===== */
+function cpsOpenDrawer() {
+  document.getElementById('cps-drawer').classList.add('open');
+  document.getElementById('cps-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  document.querySelector('.cps-hamburger').setAttribute('aria-expanded', 'true');
+}
+function cpsCloseDrawer() {
+  document.getElementById('cps-drawer').classList.remove('open');
+  document.getElementById('cps-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+  document.querySelector('.cps-hamburger').setAttribute('aria-expanded', 'false');
+}
+/* ===== ACCOUNT DROPDOWN ===== */
+(function(){
+  var trigger = document.querySelector('.cps-account-trigger');
+  if (!trigger) return;
+  var dd = trigger.closest('.cps-account-wrap').querySelector('.cps-account-dropdown');
+  trigger.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = dd.classList.toggle('show');
+    trigger.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(){ dd.classList.remove('show'); });
+})();
+/* ===== MOBILE SEARCH ===== */
+function cpsMobileSearch() {
+  var bar = document.getElementById('mobileSearchbar');
+  var show = bar.classList.toggle('open');
+  if (show) { var inp = bar.querySelector('input'); if(inp) inp.focus(); }
+}
+/* ===== SEARCH SUGGESTIONS (basic) ===== */
+(function(){
+  var inp = document.getElementById('mainSearch');
+  var box = document.getElementById('searchSuggest');
+  if (!inp || !box) return;
+  var timer;
+  inp.addEventListener('input', function(){
+    clearTimeout(timer);
+    var q = inp.value.trim();
+    if (q.length < 2) { box.style.display='none'; return; }
+    timer = setTimeout(function(){
+      fetch(CTX + '/shop?keyword=' + encodeURIComponent(q) + '&ajax=suggest', {credentials:'same-origin'})
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(data){
+          if (!data || !data.length) { box.style.display='none'; return; }
+          box.innerHTML = data.slice(0,6).map(function(item){
+            return '<a href="'+ CTX +'/shop?keyword='+ encodeURIComponent(item) +'" role="option">'+ item +'</a>';
+          }).join('');
+          box.style.display = 'block';
+        }).catch(function(){ box.style.display='none'; });
+    }, 300);
+  });
+  document.addEventListener('click', function(e){
+    if (!inp.contains(e.target)) box.style.display = 'none';
+  });
+  inp.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') box.style.display = 'none';
+  });
+})();
+</script>

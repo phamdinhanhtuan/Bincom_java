@@ -18,6 +18,16 @@ public class CartItem implements Serializable {
     private String thumbnailUrl;
     private BigDecimal unitPrice;
     private Integer quantity;
+    private String size; // Selected product size (e.g. S, M, L, 39, 40...)
+
+    public CartItem(Long productId, String productName, String thumbnailUrl, BigDecimal unitPrice, Integer quantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.thumbnailUrl = thumbnailUrl;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
+        this.size = null;
+    }
 
     public BigDecimal getTotalPrice() {
         return unitPrice.multiply(BigDecimal.valueOf(quantity));

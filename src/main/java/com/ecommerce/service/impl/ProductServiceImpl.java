@@ -24,6 +24,23 @@ public class ProductServiceImpl implements ProductService {
     @Autowired private FileUploadUtil fileUploadUtil;
     @Autowired private org.hibernate.SessionFactory sessionFactory;
 
+    private boolean isProductCodeExists(String productCode, Long excludeId) {
+        if (productCode == null || productCode.trim().isEmpty()) {
+            return false;
+        }
+        org.hibernate.Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(p) FROM Product p WHERE LOWER(p.productCode) = :code";
+        if (excludeId != null) {
+            hql += " AND p.id <> :excludeId";
+        }
+        org.hibernate.query.Query<Long> query = session.createQuery(hql, Long.class)
+            .setParameter("code", productCode.trim().toLowerCase());
+        if (excludeId != null) {
+            query.setParameter("excludeId", excludeId);
+        }
+        return query.uniqueResult() > 0;
+    }
+
     @Override
     public Product createProduct(Product product, MultipartFile thumbnail, MultipartFile[] images) {
         // Fetch managed Category
@@ -35,8 +52,15 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Generate product code if not provided
-        if (product.getProductCode() == null || product.getProductCode().isEmpty()) {
-            product.setProductCode("PRD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        if (product.getProductCode() == null || product.getProductCode().trim().isEmpty()) {
+            product.setProductCode("PRD-" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        } else {
+            product.setProductCode(product.getProductCode().trim());
+        }
+
+        // Validate uniqueness of product code
+        if (isProductCodeExists(product.getProductCode(), null)) {
+            throw new RuntimeException("Mã sản phẩm (SKU) '" + product.getProductCode() + "' đã tồn tại trong hệ thống! Vui lòng chọn mã khác.");
         }
 
         // Handle thumbnail upload
@@ -76,8 +100,21 @@ public class ProductServiceImpl implements ProductService {
         Product existing = productRepository.findById(product.getId())
             .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
 
+        String newCode = product.getProductCode();
+        if (newCode != null) {
+            newCode = newCode.trim();
+        }
+        if (newCode == null || newCode.isEmpty()) {
+            newCode = "PRD-" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
+
+        // Validate uniqueness of product code
+        if (isProductCodeExists(newCode, product.getId())) {
+            throw new RuntimeException("Mã sản phẩm (SKU) '" + newCode + "' đã tồn tại trong hệ thống! Vui lòng chọn mã khác.");
+        }
+
         existing.setName(product.getName());
-        existing.setProductCode(product.getProductCode());
+        existing.setProductCode(newCode);
         
         // Fetch managed Category
         if (product.getCategory() != null && product.getCategory().getId() != null) {
@@ -197,16 +234,30 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<Product> searchByCategoryAndKeyword(Long categoryId, String keyword,
             BigDecimal minPrice, BigDecimal maxPrice) {
-        if (categoryId != null && keyword != null && !keyword.isEmpty()) {
-            return productRepository.findByCategory(categoryId).stream()
+        List<Product> products;
+        if (categoryId != null && keyword != null && !keyword.trim().isEmpty()) {
+            products = productRepository.findByCategory(categoryId).stream()
                 .filter(p -> p.getName().toLowerCase().contains(keyword.toLowerCase()))
                 .collect(java.util.stream.Collectors.toList());
         } else if (categoryId != null) {
-            return productRepository.findByCategory(categoryId);
-        } else if (keyword != null && !keyword.isEmpty()) {
-            return productRepository.searchByKeyword(keyword);
+            products = productRepository.findByCategory(categoryId);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            products = productRepository.searchByKeyword(keyword);
+        } else {
+            products = productRepository.findAll();
         }
-        return productRepository.findAll();
+
+        if (minPrice != null) {
+            products = products.stream()
+                .filter(p -> p.getEffectivePrice().compareTo(minPrice) >= 0)
+                .collect(java.util.stream.Collectors.toList());
+        }
+        if (maxPrice != null) {
+            products = products.stream()
+                .filter(p -> p.getEffectivePrice().compareTo(maxPrice) <= 0)
+                .collect(java.util.stream.Collectors.toList());
+        }
+        return products;
     }
 
     @Override

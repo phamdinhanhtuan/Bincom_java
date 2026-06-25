@@ -61,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
             item.setProduct(product);
             item.setProductName(product.getName());
             item.setProductThumbnail(product.getThumbnailUrl());
+            item.setSize(cartItem.getSize());
             item.setQuantity(cartItem.getQuantity());
             item.setUnitPrice(product.getEffectivePrice());
             item.calculateTotal();

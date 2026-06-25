@@ -48,8 +48,32 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.update(existing);
     }
 
+    @Autowired private org.hibernate.SessionFactory sessionFactory;
+
     @Override
     public void delete(Long id) {
+        org.hibernate.Session session = sessionFactory.getCurrentSession();
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            throw new RuntimeException("Danh mục không tồn tại.");
+        }
+
+        // Check for subcategories
+        Long childCount = (Long) session.createQuery("SELECT COUNT(c) FROM Category c WHERE c.parent.id = :categoryId")
+            .setParameter("categoryId", id)
+            .uniqueResult();
+        if (childCount > 0) {
+            throw new RuntimeException("Không thể xóa danh mục này vì đang có " + childCount + " danh mục con trực thuộc. Vui lòng di chuyển hoặc xóa các danh mục con trước.");
+        }
+
+        // Check for products
+        Long productCount = (Long) session.createQuery("SELECT COUNT(p) FROM Product p WHERE p.category.id = :categoryId")
+            .setParameter("categoryId", id)
+            .uniqueResult();
+        if (productCount > 0) {
+            throw new RuntimeException("Không thể xóa danh mục này vì đang có " + productCount + " sản phẩm đang liên kết. Vui lòng di chuyển các sản phẩm sang danh mục khác trước.");
+        }
+
         categoryRepository.deleteById(id);
     }
 

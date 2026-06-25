@@ -15,7 +15,7 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl<Product, Long>
     public List<Product> findByCategory(Long categoryId) {
         return sessionFactory.getCurrentSession()
             .createQuery(
-                "FROM Product p WHERE p.category.id = :catId AND p.active = true ORDER BY p.createdAt DESC",
+                "FROM Product p WHERE (p.category.id = :catId OR (p.category.parent IS NOT NULL AND p.category.parent.id = :catId)) AND p.active = true ORDER BY p.createdAt DESC",
                 Product.class)
             .setParameter("catId", categoryId)
             .getResultList();

@@ -9,6 +9,7 @@ public interface UserService {
     User registerCustomer(User user);
     User createStaffUser(User user, String roleName);
     User updateUser(User user);
+    User updateUser(User user, String roleName);
     void deleteUser(Long userId);
     void changePassword(Long userId, String oldPassword, String newPassword);
     void resetPassword(Long userId, String newPassword);

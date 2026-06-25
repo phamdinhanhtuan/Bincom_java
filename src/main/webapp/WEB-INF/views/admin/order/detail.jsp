@@ -41,7 +41,12 @@
                                             <img src="${pageContext.request.contextPath}${item.productThumbnail}"
                                                  class="product-thumb" alt="${item.productName}">
                                         </c:if>
-                                        <div class="fw-medium">${item.productName}</div>
+                                        <div>
+                                            <div class="fw-medium">${item.productName}</div>
+                                            <c:if test="${not empty item.size}">
+                                                <div class="small text-danger fw-bold">Size: ${item.size}</div>
+                                            </c:if>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="text-center fw-bold">${item.quantity}</td>

@@ -4,16 +4,11 @@
 <c:set var="pageTitle" value="Giỏ hàng — Bincom" scope="request"/>
 <%@ include file="/WEB-INF/views/layouts/customer-header.jsp" %>
 
-<!-- BREADCRUMB -->
-<div class="breadcrumb-wrap">
-  <div class="kumo-container">
-    <nav class="breadcrumb">
-      <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-      <span class="breadcrumb-sep">/</span>
-      <span>Giỏ hàng</span>
-    </nav>
-  </div>
-</div>
+<style>
+  .cps-catnav {
+    display: none !important;
+  }
+</style>
 
 <div class="kumo-container" style="padding-top:60px;padding-bottom:80px;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;">
@@ -35,8 +30,7 @@
       </div>
     </c:when>
     <c:otherwise>
-      <div style="display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start;">
-
+      <div class="cart-grid">
         <!-- CART ITEMS -->
         <div>
           <table class="cart-table">
@@ -51,12 +45,13 @@
             </thead>
             <tbody>
               <c:forEach var="item" items="${cartItems}">
+                <c:set var="itemKey" value="${item.productId}${not empty item.size ? '_' : ''}${item.size}"/>
                 <tr>
                   <td style="width:90px;">
                     <div style="width:80px;height:100px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
                       <c:choose>
                         <c:when test="${not empty item.thumbnailUrl}">
-                          <img src="${pageContext.request.contextPath}${item.thumbnailUrl}"
+                           <img src="${pageContext.request.contextPath}${item.thumbnailUrl}"
                                style="width:100%;height:100%;object-fit:cover;"
                                alt="${item.productName}">
                         </c:when>
@@ -68,6 +63,9 @@
                   </td>
                   <td>
                     <div style="font-weight:600;font-size:15px;margin-bottom:4px;">${item.productName}</div>
+                    <c:if test="${not empty item.size}">
+                      <div style="font-size:13px;color:var(--accent);font-weight:700;margin-bottom:2px;">Size: ${item.size}</div>
+                    </c:if>
                     <div style="font-size:12px;color:var(--text-muted);">Mã: P${item.productId}</div>
                   </td>
                   <td>
@@ -76,13 +74,14 @@
                     </span>
                   </td>
                   <td>
-                    <form id="update-form-${item.productId}" action="${pageContext.request.contextPath}/cart/update" method="post">
+                    <form id="update-form-${itemKey}" action="${pageContext.request.contextPath}/cart/update" method="post">
                       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                       <input type="hidden" name="productId" value="${item.productId}">
+                      <input type="hidden" name="size" value="${item.size}">
                       <div class="qty-box">
-                        <button type="button" onclick="changeQty(${item.productId}, -1)">−</button>
-                        <input type="number" id="qty-${item.productId}" name="quantity" value="${item.quantity}" min="1" max="99">
-                        <button type="button" onclick="changeQty(${item.productId}, 1)">+</button>
+                        <button type="button" onclick="changeQty('${itemKey}', -1)">−</button>
+                        <input type="number" id="qty-${itemKey}" name="quantity" value="${item.quantity}" min="1" max="99">
+                        <button type="button" onclick="changeQty('${itemKey}', 1)">+</button>
                       </div>
                     </form>
                   </td>
@@ -92,9 +91,11 @@
                     </span>
                   </td>
                   <td>
-                    <form action="${pageContext.request.contextPath}/cart/remove" method="post">
+                    <form action="${pageContext.request.contextPath}/cart/remove" method="post"
+                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');">
                       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                       <input type="hidden" name="productId" value="${item.productId}">
+                      <input type="hidden" name="size" value="${item.size}">
                       <button type="submit" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:18px;transition:color .2s;" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text-muted)'">
                         <i class="bi bi-trash3"></i>
                       </button>
@@ -106,7 +107,7 @@
           </table>
 
           <!-- Coupon -->
-          <div style="margin-top:32px;display:flex;gap:12px;">
+          <div class="coupon-box">
             <input type="text" id="couponInput" placeholder="Nhập mã giảm giá (SALE20, GIAM50K...)"
                    style="flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:14px;outline:none;">
             <button class="btn-outline" onclick="applyCoupon()" style="white-space:nowrap;">Áp dụng</button>
@@ -166,12 +167,12 @@
 </div>
 
 <script>
-function changeQty(productId, delta) {
-  var input = document.getElementById('qty-' + productId);
+function changeQty(itemKey, delta) {
+  var input = document.getElementById('qty-' + itemKey);
   var val = parseInt(input.value) + delta;
   if (val < 1) val = 1;
   input.value = val;
-  document.getElementById('update-form-' + productId).submit();
+  document.getElementById('update-form-' + itemKey).submit();
 }
 
 function applyCoupon() {

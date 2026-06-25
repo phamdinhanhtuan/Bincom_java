@@ -28,6 +28,9 @@ public class OrderItem {
     @Column(name = "product_thumbnail")
     private String productThumbnail;
 
+    @Column(name = "size", length = 50)
+    private String size;
+
     @Column(nullable = false)
     private Integer quantity;
 

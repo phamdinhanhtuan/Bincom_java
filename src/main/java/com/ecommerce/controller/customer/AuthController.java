@@ -18,17 +18,40 @@ public class AuthController {
     @Autowired private UserService userService;
 
     @GetMapping("/login")
-    public String loginPage(@RequestParam(required = false) String error,
-                            @RequestParam(required = false) String logout,
-                            Model model) {
+    public String loginPage(@RequestParam(name = "error", required = false) String error,
+                            @RequestParam(name = "logout", required = false) String logout,
+                            Model model,
+                            javax.servlet.http.HttpServletRequest request) {
         if (error != null)  model.addAttribute("error",   "Tên đăng nhập hoặc mật khẩu không đúng!");
         if (logout != null) model.addAttribute("message", "Đăng xuất thành công.");
+
+        model.addAttribute("pageTitle", "Đăng nhập tài khoản — Bincom");
+        model.addAttribute("metaDescription", "Đăng nhập tài khoản Bincom để mua sắm điện thoại, laptop chính hãng và hưởng nhiều ưu đãi.");
+        
+        java.util.List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Đăng nhập");
+        bc.put("url", request.getContextPath() + "/login");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/login";
     }
 
     @GetMapping("/register")
-    public String registerPage(Model model) {
+    public String registerPage(Model model, javax.servlet.http.HttpServletRequest request) {
         model.addAttribute("user", new User());
+
+        model.addAttribute("pageTitle", "Đăng ký tài khoản mới — Bincom");
+        model.addAttribute("metaDescription", "Đăng ký tài khoản Bincom để tích lũy điểm thưởng và nhận ngay ưu đãi giảm 5% cho đơn hàng đầu tiên.");
+
+        java.util.List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Đăng ký");
+        bc.put("url", request.getContextPath() + "/register");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/register";
     }
 
@@ -77,9 +100,20 @@ public class AuthController {
     }
 
     @GetMapping("/account")
-    public String accountPage(Authentication auth, Model model) {
+    public String accountPage(Authentication auth, Model model, javax.servlet.http.HttpServletRequest request) {
         User user = userService.findByUsername(auth.getName()).orElseThrow();
         model.addAttribute("user", user);
+
+        model.addAttribute("pageTitle", "Tài khoản của tôi — Bincom");
+        model.addAttribute("metaDescription", "Quản lý thông tin cá nhân, địa chỉ giao hàng và đổi mật khẩu tài khoản của bạn tại Bincom.");
+
+        java.util.List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Tài khoản của tôi");
+        bc.put("url", request.getContextPath() + "/account");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/account";
     }
 

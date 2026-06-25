@@ -12,8 +12,8 @@
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:'Inter',sans-serif;background:#0a0b14;min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-        body::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 65%);border-radius:50%;}
-        body::after{content:'';position:absolute;bottom:-200px;left:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,.12) 0%,transparent 65%);border-radius:50%;}
+        body::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(13,148,136,.18) 0%,transparent 65%);border-radius:50%;}
+        body::after{content:'';position:absolute;bottom:-200px;left:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(2,132,199,.12) 0%,transparent 65%);border-radius:50%;}
 
         .login-wrap{position:relative;z-index:1;width:100%;max-width:440px;padding:24px;}
         .login-card{
@@ -27,11 +27,11 @@
         .login-logo{text-align:center;margin-bottom:8px;}
         .logo-icon{
             width:60px;height:60px;
-            background:linear-gradient(135deg,#6366f1,#818cf8);
+            background:linear-gradient(135deg,#0d9488,#0284c7);
             border-radius:16px;
             display:inline-flex;align-items:center;justify-content:center;
             font-size:28px;color:white;
-            box-shadow:0 8px 30px rgba(99,102,241,.5);
+            box-shadow:0 8px 30px rgba(13,148,136,.5);
             margin-bottom:20px;
         }
         .login-title{font-size:24px;font-weight:800;color:white;margin-bottom:4px;text-align:center;}
@@ -49,9 +49,9 @@
         }
         .form-group input::placeholder{color:rgba(255,255,255,.25);}
         .form-group input:focus{
-            border-color:rgba(99,102,241,.7);
-            background:rgba(99,102,241,.08);
-            box-shadow:0 0 0 3px rgba(99,102,241,.15);
+            border-color:rgba(13,148,136,.7);
+            background:rgba(13,148,136,.08);
+            box-shadow:0 0 0 3px rgba(13,148,136,.15);
         }
         .input-icon-wrap{position:relative;}
         .input-icon-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);font-size:16px;}
@@ -59,14 +59,14 @@
 
         .btn-login{
             width:100%;padding:14px;
-            background:linear-gradient(135deg,#6366f1,#4f46e5);
+            background:linear-gradient(135deg,#0d9488,#0f766e);
             border:none;border-radius:12px;
             color:white;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;
             cursor:pointer;transition:all .25s;
-            box-shadow:0 4px 20px rgba(99,102,241,.45);
+            box-shadow:0 4px 20px rgba(13,148,136,.45);
             margin-top:8px;
         }
-        .btn-login:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,.55);}
+        .btn-login:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 8px 28px rgba(13,148,136,.55);}
         .btn-login:active{transform:translateY(0);}
 
         .alert-err{
@@ -77,8 +77,16 @@
         .divider{margin:24px 0;border-top:1px solid rgba(255,255,255,.08);position:relative;text-align:center;}
         .divider span{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#12131f;padding:0 12px;color:rgba(255,255,255,.3);font-size:11px;}
         .back-link{display:block;text-align:center;color:rgba(255,255,255,.4);font-size:13px;text-decoration:none;transition:color .2s;}
-        .back-link:hover{color:rgba(255,255,255,.8);}
+        .back-link:hover{color:#2dd4bf;}
         .back-link i{margin-right:6px;}
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 20px;
+            }
+            .login-title {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>

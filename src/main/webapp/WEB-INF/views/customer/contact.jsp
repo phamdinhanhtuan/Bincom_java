@@ -10,7 +10,7 @@
       <div style="text-align: center; margin-bottom: 40px;">
         <span style="font-size: 48px;">📞</span>
         <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 38px; font-weight: 800; color: #0f172a; margin-top: 16px;">
-          Liên hệ <span style="color: #2563eb;">Bincom</span>
+          Liên hệ <span style="color: #0d9488;">Bincom</span>
         </h1>
         <p style="font-size: 16px; color: #64748b; margin-top: 8px; font-weight: 500;">
           Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn 24/7.
@@ -54,7 +54,7 @@
               <label style="display: block; font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px;">Nội dung</label>
               <textarea name="message" class="form-control" rows="4" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0;" placeholder="Lời nhắn của bạn..." required></textarea>
             </div>
-            <button type="submit" style="background:#2563eb; color: white; border: none; font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+            <button type="submit" style="background:#0d9488; color: white; border: none; font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;">
               Gửi liên hệ
             </button>
           </form>
@@ -64,15 +64,15 @@
         <div style="background: #f8fafc; border-radius: 16px; padding: 32px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 20px;">
           <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Thông tin liên hệ</h3>
           <div>
-            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-geo-alt-fill me-2" style="color:#2563eb;"></i>Địa chỉ chính</div>
+            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-geo-alt-fill me-2" style="color:#0d9488;"></i>Địa chỉ chính</div>
             <div style="color: #64748b; font-size: 14px;">Tòa nhà Bincom, Quận 1, TP. Hồ Chí Minh</div>
           </div>
           <div>
-            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-telephone-fill me-2" style="color:#2563eb;"></i>Hotline hỗ trợ</div>
+            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-telephone-fill me-2" style="color:#0d9488;"></i>Hotline hỗ trợ</div>
             <div style="color: #64748b; font-size: 14px;">1800 1234 (Miễn phí cuộc gọi, 8:00 – 22:00)</div>
           </div>
           <div>
-            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-envelope-fill me-2" style="color:#2563eb;"></i>Email</div>
+            <div style="font-weight: 700; color: #0f172a;"><i class="bi bi-envelope-fill me-2" style="color:#0d9488;"></i>Email</div>
             <div style="color: #64748b; font-size: 14px;">support@bincom.vn</div>
           </div>
         </div>

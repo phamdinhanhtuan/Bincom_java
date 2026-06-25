@@ -64,7 +64,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    background: #2563eb;
+    background: #0d9488;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -95,18 +95,18 @@
   }
   
   .stepper-item.completed .stepper-circle {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: #0d9488;
+    border-color: #0d9488;
     color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
   }
   
   .stepper-item.active .stepper-circle {
     background: #ffffff;
-    border-color: #2563eb;
-    color: #2563eb;
+    border-color: #0d9488;
+    color: #0d9488;
     font-weight: 700;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
   }
   
   .stepper-text {
@@ -123,8 +123,31 @@
   }
   
   .stepper-item.active .stepper-text {
-    color: #2563eb;
+    color: #0d9488;
     font-weight: 700;
+  }
+  
+  @media (max-width: 576px) {
+    .stepper-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 24px 32px;
+    }
+    .stepper-line {
+      display: none; /* Hide background line on mobile for clean stacked circles */
+    }
+    .stepper-item {
+      flex-direction: row;
+      width: 100%;
+      gap: 16px;
+      padding: 0;
+      align-items: center;
+    }
+    .stepper-text {
+      margin-top: 0;
+      text-align: left;
+    }
   }
   
   /* Status Badge premium */
@@ -139,7 +162,7 @@
     align-items: center;
   }
   .badge-premium.pending { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
-  .badge-premium.confirmed { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+  .badge-premium.confirmed { background: #f0fdfa; color: #0d9488; border: 1px solid #99f6e4; }
   .badge-premium.shipping { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
   .badge-premium.completed { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
   .badge-premium.cancelled { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
@@ -185,7 +208,7 @@
         <div>
             <div style="display:flex; align-items:center; gap:12px; margin-bottom: 8px; flex-wrap: wrap;">
                 <h1 class="fw-bold mb-0" style="font-size:26px; color:#0f172a; font-family:'Plus Jakarta Sans',sans-serif;">
-                    Đơn hàng <span style="color:#2563eb;">#${order.orderCode}</span>
+                    Đơn hàng <span style="color:#0d9488;">#${order.orderCode}</span>
                 </h1>
                 <c:choose>
                     <c:when test="${order.status == 'PENDING'}">
@@ -335,11 +358,14 @@
                             <div class="flex-grow-1">
                                 <div style="font-weight:700; font-size:14px; color:#0f172a; margin-bottom:4px;">${item.productName}</div>
                                 <div style="color:#64748b; font-size:13px;">
+                                    <c:if test="${not empty item.size}">
+                                        Kích cỡ: <span style="font-weight:600; color:var(--accent);">${item.size}</span> &nbsp;•&nbsp;
+                                    </c:if>
                                     Đơn giá: <span style="font-weight:500; color:#0f172a;"><fmt:formatNumber value="${item.unitPrice}" type="number" groupingUsed="true"/>₫</span>
                                     &nbsp;•&nbsp; Số lượng: <span style="font-weight:600; color:#0f172a;">${item.quantity}</span>
                                 </div>
                             </div>
-                            <div style="font-weight: 700; color: #2563eb; font-size:15px;">
+                            <div style="font-weight: 700; color: #0d9488; font-size:15px;">
                                 <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/>₫
                             </div>
                         </div>
@@ -377,7 +403,7 @@
                     </c:if>
                     <div class="summary-item total">
                         <span>Tổng cộng</span>
-                        <span style="color:#2563eb;"><fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/>₫</span>
+                        <span style="color:#0d9488;"><fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/>₫</span>
                     </div>
                     <div style="margin-top: 16px; padding: 12px 16px; background: #f8fafc; border-radius: 12px; font-size: 13px; color: #64748b; display: flex; align-items: center; gap: 8px;">
                         <i class="bi bi-credit-card-fill text-primary" style="font-size: 16px;"></i>

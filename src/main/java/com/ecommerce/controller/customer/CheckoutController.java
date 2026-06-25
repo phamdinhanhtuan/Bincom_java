@@ -28,8 +28,8 @@ public class CheckoutController {
     @Autowired private CouponService couponService;
 
     @GetMapping
-    public String checkoutForm(HttpSession session, Authentication auth, Model model) {
-        Map<Long, CartItem> cart = getCart(session);
+    public String checkoutForm(HttpSession session, Authentication auth, Model model, javax.servlet.http.HttpServletRequest request) {
+        Map<String, CartItem> cart = getCart(session);
         if (cart.isEmpty()) {
             return "redirect:/cart";
         }
@@ -46,6 +46,22 @@ public class CheckoutController {
         model.addAttribute("subtotal",    subtotal);
         model.addAttribute("shippingFee", shippingFee);
         model.addAttribute("total",       subtotal.add(shippingFee));
+
+        model.addAttribute("pageTitle", "Thanh toán đơn hàng — Bincom");
+        model.addAttribute("metaDescription", "Nhập thông tin nhận hàng và hoàn tất đơn đặt hàng của bạn tại Bincom.");
+
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+        Map<String, String> bc1 = new LinkedHashMap<>();
+        bc1.put("name", "Giỏ hàng");
+        bc1.put("url", request.getContextPath() + "/cart");
+        breadcrumbs.add(bc1);
+
+        Map<String, String> bc2 = new LinkedHashMap<>();
+        bc2.put("name", "Thanh toán");
+        bc2.put("url", request.getContextPath() + "/checkout");
+        breadcrumbs.add(bc2);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/checkout";
     }
 
@@ -61,7 +77,7 @@ public class CheckoutController {
             Authentication auth,
             RedirectAttributes redirectAttrs) {
 
-        Map<Long, CartItem> cart = getCart(session);
+        Map<String, CartItem> cart = getCart(session);
         if (cart.isEmpty()) {
             return "redirect:/cart";
         }
@@ -87,7 +103,17 @@ public class CheckoutController {
     }
 
     @GetMapping("/success")
-    public String orderSuccess() {
+    public String orderSuccess(Model model, javax.servlet.http.HttpServletRequest request) {
+        model.addAttribute("pageTitle", "Đặt hàng thành công — Bincom");
+        model.addAttribute("metaDescription", "Cảm ơn bạn đã mua hàng! Đơn hàng của bạn đã được nhận và đang xử lý tại Bincom.");
+
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+        Map<String, String> bc = new LinkedHashMap<>();
+        bc.put("name", "Đặt hàng thành công");
+        bc.put("url", request.getContextPath() + "/checkout/success");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/order-success";
     }
 
@@ -110,8 +136,8 @@ public class CheckoutController {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<Long, CartItem> getCart(HttpSession session) {
-        Map<Long, CartItem> cart = (Map<Long, CartItem>) session.getAttribute(CART_SESSION_KEY);
+    private Map<String, CartItem> getCart(HttpSession session) {
+        Map<String, CartItem> cart = (Map<String, CartItem>) session.getAttribute(CART_SESSION_KEY);
         return cart != null ? cart : new LinkedHashMap<>();
     }
 }

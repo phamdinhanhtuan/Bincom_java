@@ -36,10 +36,10 @@
     </c:if>
 
     <c:if test="${not empty order}">
-        <div class="card" style="border-top:3px solid #6c63ff;">
-            <div class="card-header" style="background:#f8f7ff;">
+        <div class="card" style="border-top:3px solid #0d9488;">
+            <div class="card-header" style="background:#f0fdfa;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold text-primary fs-5">#${order.orderCode}</span>
+                    <span class="fw-bold fs-5" style="color:#0d9488;">#${order.orderCode}</span>
                     <c:choose>
                         <c:when test="${order.status == 'PENDING'}">
                             <span class="badge bg-warning text-dark">${order.status.displayName}</span>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="small text-muted mb-1">Tổng tiền</div>
-                        <div class="fw-bold text-primary fs-5">
+                        <div class="fw-bold fs-5" style="color:#0d9488;">
                             <fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/>₫
                         </div>
                     </div>
@@ -100,7 +100,13 @@
                     <div class="text-muted small mb-2">Sản phẩm:</div>
                     <c:forEach var="item" items="${order.orderItems}">
                         <div class="d-flex justify-content-between align-items-center py-1">
-                            <span class="small">${item.productName} × ${item.quantity}</span>
+                            <span class="small">
+                                ${item.productName}
+                                <c:if test="${not empty item.size}">
+                                    <span style="font-weight:700; color:var(--accent);">(${item.size})</span>
+                                </c:if>
+                                × ${item.quantity}
+                            </span>
                             <span class="small fw-bold">
                                 <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/>₫
                             </span>

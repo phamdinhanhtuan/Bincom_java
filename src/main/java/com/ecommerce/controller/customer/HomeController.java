@@ -19,19 +19,50 @@ public class HomeController {
 
     @GetMapping({"/", "/home", "/index.jsp"})
     public String home(Model model) {
-        model.addAttribute("featuredProducts", productService.findFeaturedProducts(15));
-        model.addAttribute("latestProducts",   productService.findLatestProducts(15));
+        // Data attributes
+        model.addAttribute("featuredProducts", productService.findFeaturedProducts(30));
+        model.addAttribute("latestProducts",   productService.findLatestProducts(30));
         model.addAttribute("categories",       categoryService.findActiveCategories());
+
+        // SEO attributes (required by customer-header.jsp)
+        model.addAttribute("pageTitle",
+            "Bincom — Điện thoại, Laptop, Thời trang & Gia dụng chính hãng");
+        model.addAttribute("metaDescription",
+            "Mua điện thoại, laptop, thời trang, đồ gia dụng chính hãng tại Bincom. " +
+            "Giá tốt nhất, bảo hành 12 tháng, giao hàng nhanh 2h toàn quốc.");
+        model.addAttribute("metaKeywords",
+            "bincom, điện thoại chính hãng, mua iphone giá tốt, samsung galaxy, " +
+            "laptop giá rẻ, thời trang online, đồ gia dụng thông minh");
         return "customer/home";
     }
 
     @GetMapping("/about")
-    public String about() {
+    public String about(Model model, javax.servlet.http.HttpServletRequest request) {
+        model.addAttribute("pageTitle", "Về chúng tôi — Bincom");
+        model.addAttribute("metaDescription", "Tìm hiểu về Bincom, hệ thống bán lẻ điện thoại, laptop, phụ kiện chính hãng hàng đầu.");
+        model.addAttribute("metaKeywords", "về Bincom, giới thiệu Bincom, cửa hàng công nghệ");
+
+        java.util.List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Về Bincom");
+        bc.put("url", request.getContextPath() + "/about");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
         return "customer/about";
     }
 
     @GetMapping("/contact")
-    public String contact() {
+    public String contact(Model model, javax.servlet.http.HttpServletRequest request) {
+        model.addAttribute("pageTitle", "Liên hệ hỗ trợ — Bincom");
+        model.addAttribute("metaDescription", "Liên hệ với Bincom để được hỗ trợ mua hàng, bảo hành thiết bị di động, laptop nhanh chóng.");
+        model.addAttribute("metaKeywords", "liên hệ Bincom, hotline Bincom, tổng đài hỗ trợ");
+
+        java.util.List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Hỗ trợ khách hàng");
+        bc.put("url", request.getContextPath() + "/contact");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
         return "customer/contact";
     }
 

@@ -10,9 +10,11 @@
         <h5>Danh sách sản phẩm</h5>
         <p>Quản lý toàn bộ sản phẩm trong hệ thống</p>
     </div>
+    <sec:authorize access="hasAnyRole('ADMIN','STORE_MANAGER')">
     <a href="${pageContext.request.contextPath}/admin/products/new" class="btn-primary-custom">
         <i class="bi bi-plus-lg"></i> Thêm sản phẩm
     </a>
+    </sec:authorize>
 </div>
 
 <!-- Filter Bar -->
@@ -110,33 +112,46 @@
                             </span>
                         </td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/admin/products/${product.id}/toggle-featured" method="post" class="d-inline">
+                            <sec:authorize access="hasAnyRole('ADMIN','STORE_MANAGER')">
+                            <form action="${pageContext.request.contextPath}/admin/products/${product.id}/toggle-featured" method="post" class="d-inline"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn ${product.featured ? 'Bỏ nổi bật' : 'Đánh dấu nổi bật'} sản phẩm \'${product.name}\' không?');">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <button type="submit" class="btn btn-sm ${product.featured ? 'btn-warning' : 'btn-outline-secondary'} rounded-pill" title="${product.featured ? 'Bỏ nổi bật' : 'Đánh dấu nổi bật'}">
                                     <i class="bi bi-star${product.featured ? '-fill' : ''}"></i>
                                 </button>
                             </form>
+                            </sec:authorize>
+                            <sec:authorize access="!hasAnyRole('ADMIN','STORE_MANAGER')">
+                                <span class="badge ${product.featured ? 'bg-warning text-dark' : 'bg-light text-secondary'} rounded-pill" style="padding: 6px 10px;">
+                                    <i class="bi bi-star${product.featured ? '-fill' : ''}"></i>
+                                </span>
+                            </sec:authorize>
                         </td>
                         <td>
                             <div class="d-flex gap-1">
+                                <sec:authorize access="hasAnyRole('ADMIN','STORE_MANAGER')">
                                 <a href="${pageContext.request.contextPath}/admin/products/${product.id}/edit"
                                    class="btn btn-sm btn-outline-primary rounded-2" title="Chỉnh sửa">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
-                                <form action="${pageContext.request.contextPath}/admin/products/${product.id}/toggle-status" method="post" class="d-inline">
+                                <form action="${pageContext.request.contextPath}/admin/products/${product.id}/toggle-status" method="post" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn ${product.active ? 'Ẩn' : 'Hiện'} sản phẩm \'${product.name}\' không?');">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <button type="submit" class="btn btn-sm ${product.active ? 'btn-outline-warning' : 'btn-outline-success'} rounded-2" title="${product.active ? 'Ẩn' : 'Hiện'}">
                                         <i class="bi bi-${product.active ? 'eye-slash' : 'eye'}-fill"></i>
                                     </button>
                                 </form>
-                                <form action="${pageContext.request.contextPath}/admin/products/${product.id}/delete" method="post" class="d-inline">
+                                </sec:authorize>
+                                <sec:authorize access="hasRole('ADMIN')">
+                                <form action="${pageContext.request.contextPath}/admin/products/${product.id}/delete" method="post" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm \'${product.name}\'?');">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <button type="submit" class="btn btn-sm btn-outline-danger rounded-2"
-                                            data-confirm="Bạn có chắc muốn xóa sản phẩm '${product.name}'?"
                                             title="Xóa">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
                                 </form>
+                                </sec:authorize>
                             </div>
                         </td>
                     </tr>

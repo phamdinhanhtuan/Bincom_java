@@ -88,7 +88,12 @@
                                    class="btn btn-sm btn-outline-primary rounded-2" title="Chi tiết">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <form action="${pageContext.request.contextPath}/admin/users/${user.id}/toggle-status" method="post" class="d-inline">
+                                <a href="${pageContext.request.contextPath}/admin/users/${user.id}/edit"
+                                   class="btn btn-sm btn-outline-secondary rounded-2" title="Chỉnh sửa">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <form action="${pageContext.request.contextPath}/admin/users/${user.id}/toggle-status" method="post" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn ${user.enabled ? 'Khóa' : 'Kích hoạt'} tài khoản \'${user.username}\' không?');">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <button type="submit" class="btn btn-sm ${user.enabled ? 'btn-outline-warning' : 'btn-outline-success'} rounded-2"
                                             title="${user.enabled ? 'Khóa tài khoản' : 'Kích hoạt'}">

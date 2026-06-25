@@ -23,8 +23,8 @@ public class CartController {
     @Autowired private ProductService productService;
 
     @GetMapping
-    public String viewCart(HttpSession session, Model model) {
-        Map<Long, CartItem> cart = getCart(session);
+    public String viewCart(HttpSession session, Model model, javax.servlet.http.HttpServletRequest request) {
+        Map<String, CartItem> cart = getCart(session);
         BigDecimal subtotal = cart.values().stream()
             .map(CartItem::getTotalPrice)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -35,6 +35,17 @@ public class CartController {
         model.addAttribute("subtotal",    subtotal);
         model.addAttribute("shippingFee", shippingFee);
         model.addAttribute("total",       subtotal.add(shippingFee));
+
+        model.addAttribute("pageTitle", "Giỏ hàng của bạn — Bincom");
+        model.addAttribute("metaDescription", "Xem và kiểm tra lại giỏ hàng của bạn trước khi tiến hành thanh toán tại Bincom.");
+
+        List<Map<String, String>> breadcrumbs = new ArrayList<>();
+        Map<String, String> bc = new LinkedHashMap<>();
+        bc.put("name", "Giỏ hàng");
+        bc.put("url", request.getContextPath() + "/cart");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/cart";
     }
 
@@ -43,6 +54,7 @@ public class CartController {
     public ResponseEntity<Map<String, Object>> addToCart(
             @RequestParam Long productId,
             @RequestParam(defaultValue = "1") int quantity,
+            @RequestParam(required = false) String size,
             HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
@@ -56,18 +68,21 @@ public class CartController {
                 return ResponseEntity.ok(response);
             }
 
-            Map<Long, CartItem> cart = getCart(session);
-            if (cart.containsKey(productId)) {
-                cart.get(productId).incrementQuantity(quantity);
+            Map<String, CartItem> cart = getCart(session);
+            String cartKey = productId + (size != null && !size.trim().isEmpty() ? "_" + size.trim() : "");
+            
+            if (cart.containsKey(cartKey)) {
+                cart.get(cartKey).incrementQuantity(quantity);
             } else {
                 CartItem item = new CartItem(
                     productId,
                     product.getName(),
                     product.getThumbnailUrl(),
                     product.getEffectivePrice(),
-                    quantity
+                    quantity,
+                    (size != null && !size.trim().isEmpty() ? size.trim() : null)
                 );
-                cart.put(productId, item);
+                cart.put(cartKey, item);
             }
             session.setAttribute(CART_SESSION_KEY, cart);
 
@@ -83,14 +98,16 @@ public class CartController {
 
     @PostMapping("/update")
     public String updateCart(@RequestParam Long productId,
+                             @RequestParam(required = false) String size,
                              @RequestParam int quantity,
                              HttpSession session,
                              RedirectAttributes redirectAttrs) {
-        Map<Long, CartItem> cart = getCart(session);
+        Map<String, CartItem> cart = getCart(session);
+        String cartKey = productId + (size != null && !size.trim().isEmpty() ? "_" + size.trim() : "");
         if (quantity <= 0) {
-            cart.remove(productId);
+            cart.remove(cartKey);
         } else {
-            CartItem item = cart.get(productId);
+            CartItem item = cart.get(cartKey);
             if (item != null) item.setQuantity(quantity);
         }
         session.setAttribute(CART_SESSION_KEY, cart);
@@ -99,10 +116,12 @@ public class CartController {
 
     @PostMapping("/remove")
     public String removeFromCart(@RequestParam Long productId,
+                                 @RequestParam(required = false) String size,
                                  HttpSession session,
                                  RedirectAttributes redirectAttrs) {
-        Map<Long, CartItem> cart = getCart(session);
-        cart.remove(productId);
+        Map<String, CartItem> cart = getCart(session);
+        String cartKey = productId + (size != null && !size.trim().isEmpty() ? "_" + size.trim() : "");
+        cart.remove(cartKey);
         session.setAttribute(CART_SESSION_KEY, cart);
         redirectAttrs.addFlashAttribute("message", "Đã xóa sản phẩm khỏi giỏ hàng.");
         return "redirect:/cart";
@@ -117,14 +136,14 @@ public class CartController {
     @GetMapping("/count")
     @ResponseBody
     public ResponseEntity<Integer> getCartCount(HttpSession session) {
-        Map<Long, CartItem> cart = getCart(session);
+        Map<String, CartItem> cart = getCart(session);
         int count = cart.values().stream().mapToInt(CartItem::getQuantity).sum();
         return ResponseEntity.ok(count);
     }
 
     @SuppressWarnings("unchecked")
-    private Map<Long, CartItem> getCart(HttpSession session) {
-        Map<Long, CartItem> cart = (Map<Long, CartItem>) session.getAttribute(CART_SESSION_KEY);
+    private Map<String, CartItem> getCart(HttpSession session) {
+        Map<String, CartItem> cart = (Map<String, CartItem>) session.getAttribute(CART_SESSION_KEY);
         if (cart == null) {
             cart = new LinkedHashMap<>();
             session.setAttribute(CART_SESSION_KEY, cart);

@@ -14,6 +14,9 @@
         <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-outline-secondary rounded-3">
             <i class="bi bi-arrow-left me-1"></i> Quay lại
         </a>
+        <a href="${pageContext.request.contextPath}/admin/users/${user.id}/edit" class="btn btn-primary rounded-3">
+            <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa
+        </a>
         <form action="${pageContext.request.contextPath}/admin/users/${user.id}/toggle-status" method="post" class="d-inline">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <button type="submit" class="btn ${user.enabled ? 'btn-outline-warning' : 'btn-outline-success'} rounded-3">
@@ -21,10 +24,10 @@
                 ${user.enabled ? 'Khóa tài khoản' : 'Kích hoạt'}
             </button>
         </form>
-        <form action="${pageContext.request.contextPath}/admin/users/${user.id}/delete" method="post" class="d-inline">
+        <form action="${pageContext.request.contextPath}/admin/users/${user.id}/delete" method="post" class="d-inline"
+              onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản \'${user.username}\'?');">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <button type="submit" class="btn btn-outline-danger rounded-3"
-                    data-confirm="Bạn có chắc muốn xóa tài khoản '${user.username}'?">
+            <button type="submit" class="btn btn-outline-danger rounded-3" title="Xóa">
                 <i class="bi bi-trash3-fill me-1"></i> Xóa
             </button>
         </form>

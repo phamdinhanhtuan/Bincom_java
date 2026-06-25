@@ -15,6 +15,41 @@
     <!-- ===== Admin Security ===== -->
     <http pattern="/admin/**" use-expressions="true">
         <intercept-url pattern="/admin/login" access="permitAll"/>
+        
+        <!-- Users Management: Only ADMIN -->
+        <intercept-url pattern="/admin/users/**" access="hasRole('ADMIN')"/>
+        
+        <!-- Reports: ADMIN and STORE_MANAGER -->
+        <intercept-url pattern="/admin/reports/**" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        
+        <!-- Categories Write Operations: ADMIN and STORE_MANAGER -->
+        <intercept-url pattern="/admin/categories/*/delete" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/admin/categories/new" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/categories/save" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/categories/*/edit" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/categories/*/update" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        
+        <!-- Categories View Operations: ADMIN, STORE_MANAGER, SALES_STAFF -->
+        <intercept-url pattern="/admin/categories" access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF')"/>
+        
+        <!-- Products Write Operations: ADMIN and STORE_MANAGER -->
+        <intercept-url pattern="/admin/products/*/delete" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/admin/products/new" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/products/save" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/products/*/edit" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/products/*/update" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/products/*/toggle-status" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        <intercept-url pattern="/admin/products/*/toggle-featured" access="hasAnyRole('ADMIN','STORE_MANAGER')"/>
+        
+        <!-- Products View Operations: ADMIN, STORE_MANAGER, SALES_STAFF, WAREHOUSE_STAFF -->
+        <intercept-url pattern="/admin/products" access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
+        
+        <!-- Orders Management: ADMIN, STORE_MANAGER, SALES_STAFF -->
+        <intercept-url pattern="/admin/orders/**" access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF')"/>
+        
+        <!-- General Admin Dashboard & Home: ADMIN, STORE_MANAGER, SALES_STAFF, WAREHOUSE_STAFF -->
+        <intercept-url pattern="/admin/dashboard" access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
+        <intercept-url pattern="/admin" access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
         <intercept-url pattern="/admin/**"    access="hasAnyRole('ADMIN','STORE_MANAGER','SALES_STAFF','WAREHOUSE_STAFF')"/>
         <form-login login-page="/admin/login"
                     login-processing-url="/admin/login"

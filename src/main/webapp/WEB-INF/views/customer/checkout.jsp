@@ -3,8 +3,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="pageTitle" value="Thanh toán — Bincom" scope="request"/>
 <%@ include file="/WEB-INF/views/layouts/customer-header.jsp" %>
+<h1 class="visually-hidden">Thanh toán đơn hàng Bincom</h1>
 
 <style>
+.cps-catnav {
+  display: none !important;
+}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -15,17 +19,7 @@
 }
 </style>
 
-<div class="breadcrumb-wrap">
-  <div class="kumo-container">
-    <nav class="breadcrumb">
-      <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-      <span class="breadcrumb-sep">/</span>
-      <a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a>
-      <span class="breadcrumb-sep">/</span>
-      <span>Thanh toán</span>
-    </nav>
-  </div>
-</div>
+
 
 <div class="kumo-container">
   <div class="checkout-grid">
@@ -77,7 +71,7 @@
 
           <label class="payment-option" id="pay-bank">
             <input type="radio" name="paymentMethod" value="BANK_TRANSFER" onchange="selectPayment(this, 'pay-bank')">
-            <div style="font-size:28px;color:#2563eb;"><i class="bi bi-bank2"></i></div>
+            <div style="font-size:28px;color:#0d9488;"><i class="bi bi-bank2"></i></div>
             <div>
               <div style="font-weight:600;font-size:14px;">Chuyển khoản ngân hàng</div>
               <div style="font-size:12px;color:var(--text-muted);">Chuyển khoản trước, xác nhận trong 24h</div>
@@ -115,7 +109,7 @@
         </div>
 
         <button type="submit" id="btnSubmitOrder" class="btn-primary"
-                style="width:100%;justify-content:center;padding:18px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#6c63ff,#4f46e5);border:none;border-radius:14px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:opacity .2s;"
+                style="width:100%;justify-content:center;padding:18px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#0d9488,#0f766e);border:none;border-radius:14px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:opacity .2s;"
                 onmouseover="if(!this.disabled) this.style.opacity='.88'" onmouseout="if(!this.disabled) this.style.opacity='1'">
           <i class="bi bi-bag-check-fill"></i> Đặt hàng ngay
         </button>
@@ -143,9 +137,12 @@
             </div>
             <div style="flex:1;min-width:0;">
               <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.productName}</div>
+              <c:if test="${not empty item.size}">
+                <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px;">Size: ${item.size}</div>
+              </c:if>
               <div style="font-size:12px;color:var(--text-muted);">Số lượng: × ${item.quantity}</div>
             </div>
-            <div style="font-size:13px;font-weight:700;flex-shrink:0;color:#6c63ff;">
+            <div style="font-size:13px;font-weight:700;flex-shrink:0;color:#0d9488;">
               <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/>₫
             </div>
           </div>

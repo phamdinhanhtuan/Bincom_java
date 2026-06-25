@@ -65,11 +65,15 @@
                         <div class="col-md-6">
                             <label class="form-label fw-medium">Vai trò <span class="text-danger">*</span></label>
                             <select name="roleName" class="form-select rounded-3">
-                                <option value="ROLE_CUSTOMER">Khách hàng</option>
-                                <option value="ROLE_SALES_STAFF">Nhân viên bán hàng</option>
-                                <option value="ROLE_WAREHOUSE_STAFF">Nhân viên kho</option>
-                                <option value="ROLE_STORE_MANAGER">Quản lý cửa hàng</option>
-                                <option value="ROLE_ADMIN">Quản trị viên</option>
+                                <c:set var="userRole" value="ROLE_CUSTOMER"/>
+                                <c:forEach var="r" items="${user.roles}">
+                                    <c:set var="userRole" value="${r.name}"/>
+                                </c:forEach>
+                                <option value="ROLE_CUSTOMER" ${userRole == 'ROLE_CUSTOMER' ? 'selected' : ''}>Khách hàng</option>
+                                <option value="ROLE_SALES_STAFF" ${userRole == 'ROLE_SALES_STAFF' ? 'selected' : ''}>Nhân viên bán hàng</option>
+                                <option value="ROLE_WAREHOUSE_STAFF" ${userRole == 'ROLE_WAREHOUSE_STAFF' ? 'selected' : ''}>Nhân viên kho</option>
+                                <option value="ROLE_STORE_MANAGER" ${userRole == 'ROLE_STORE_MANAGER' ? 'selected' : ''}>Quản lý cửa hàng</option>
+                                <option value="ROLE_ADMIN" ${userRole == 'ROLE_ADMIN' ? 'selected' : ''}>Quản trị viên</option>
                             </select>
                         </div>
                         <div class="col-md-6">

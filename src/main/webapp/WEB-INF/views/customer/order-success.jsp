@@ -3,6 +3,12 @@
 <c:set var="pageTitle" value="Đặt hàng thành công — Bincom" scope="request"/>
 <%@ include file="/WEB-INF/views/layouts/customer-header.jsp" %>
 
+<style>
+  .cps-catnav {
+    display: none !important;
+  }
+</style>
+
 <div class="container-shop" style="padding:60px 24px;text-align:center;max-width:600px;margin:0 auto;">
     <div style="width:100px;height:100px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto 24px;">
         ✅

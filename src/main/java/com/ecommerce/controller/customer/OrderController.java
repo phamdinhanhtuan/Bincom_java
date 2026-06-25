@@ -21,17 +21,34 @@ public class OrderController {
     @Autowired private UserService userService;
 
     @GetMapping
-    public String myOrders(Authentication auth, Model model) {
+    public String myOrders(Authentication auth, Model model, javax.servlet.http.HttpServletRequest request) {
         User user = userService.findByUsername(auth.getName()).orElseThrow();
         List<Order> orders = orderService.findByCustomerId(user.getId());
         model.addAttribute("orders", orders);
+
+        model.addAttribute("pageTitle", "Đơn hàng của tôi — Bincom");
+        model.addAttribute("metaDescription", "Xem danh sách và theo dõi lịch sử các đơn hàng đã đặt mua của bạn tại Bincom.");
+
+        List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc1 = new java.util.LinkedHashMap<>();
+        bc1.put("name", "Tài khoản");
+        bc1.put("url", request.getContextPath() + "/account");
+        breadcrumbs.add(bc1);
+
+        java.util.Map<String, String> bc2 = new java.util.LinkedHashMap<>();
+        bc2.put("name", "Đơn hàng của tôi");
+        bc2.put("url", request.getContextPath() + "/orders");
+        breadcrumbs.add(bc2);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/orders";
     }
 
     @GetMapping("/{orderCode}")
     public String orderDetail(@PathVariable String orderCode,
                               Authentication auth,
-                              Model model) {
+                              Model model,
+                              javax.servlet.http.HttpServletRequest request) {
         Order order = orderService.findByOrderCode(orderCode)
             .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
         User user = userService.findByUsername(auth.getName()).orElseThrow();
@@ -42,6 +59,27 @@ public class OrderController {
         }
 
         model.addAttribute("order", order);
+
+        model.addAttribute("pageTitle", "Chi tiết đơn hàng " + orderCode + " — Bincom");
+        model.addAttribute("metaDescription", "Chi tiết sản phẩm, tổng tiền thanh toán và trạng thái vận chuyển của đơn hàng " + orderCode + " tại Bincom.");
+
+        List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc1 = new java.util.LinkedHashMap<>();
+        bc1.put("name", "Tài khoản");
+        bc1.put("url", request.getContextPath() + "/account");
+        breadcrumbs.add(bc1);
+
+        java.util.Map<String, String> bc2 = new java.util.LinkedHashMap<>();
+        bc2.put("name", "Đơn hàng của tôi");
+        bc2.put("url", request.getContextPath() + "/orders");
+        breadcrumbs.add(bc2);
+
+        java.util.Map<String, String> bc3 = new java.util.LinkedHashMap<>();
+        bc3.put("name", "Chi tiết đơn hàng");
+        bc3.put("url", request.getContextPath() + "/orders/" + orderCode);
+        breadcrumbs.add(bc3);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/order-detail";
     }
 
@@ -61,7 +99,7 @@ public class OrderController {
     }
 
     @GetMapping("/track")
-    public String trackOrder(@RequestParam(required = false) String orderCode, Model model) {
+    public String trackOrder(@RequestParam(name = "orderCode", required = false) String orderCode, Model model, javax.servlet.http.HttpServletRequest request) {
         if (orderCode != null && !orderCode.isEmpty()) {
             orderService.findByOrderCode(orderCode)
                 .ifPresentOrElse(
@@ -70,6 +108,17 @@ public class OrderController {
                 );
         }
         model.addAttribute("orderCode", orderCode);
+
+        model.addAttribute("pageTitle", "Tra cứu đơn hàng — Bincom");
+        model.addAttribute("metaDescription", "Tra cứu trạng thái vận chuyển và thông tin đơn hàng nhanh chóng, chính xác tại Bincom.");
+
+        List<java.util.Map<String, String>> breadcrumbs = new java.util.ArrayList<>();
+        java.util.Map<String, String> bc = new java.util.LinkedHashMap<>();
+        bc.put("name", "Tra cứu đơn hàng");
+        bc.put("url", request.getContextPath() + "/orders/track");
+        breadcrumbs.add(bc);
+        model.addAttribute("breadcrumbs", breadcrumbs);
+
         return "customer/order-tracking";
     }
 }

@@ -48,20 +48,61 @@ public class AdminUserController {
         return "admin/user/form";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        User user = userService.findById(id)
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        model.addAttribute("user", user);
+        return "admin/user/form";
+    }
+
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute User user,
+    public String save(@ModelAttribute User user,
                        BindingResult result,
                        @RequestParam(defaultValue = "ROLE_CUSTOMER") String roleName,
                        Model model,
                        RedirectAttributes redirectAttrs) {
+        
+        // Manual validation based on create vs update
+        if (user.getId() == null) {
+            if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+                result.rejectValue("fullName", "NotEmpty", "Họ tên không được để trống");
+            }
+            if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+                result.rejectValue("username", "NotEmpty", "Tên đăng nhập không được để trống");
+            } else if (user.getUsername().length() < 4 || user.getUsername().length() > 50) {
+                result.rejectValue("username", "Size", "Tên đăng nhập phải từ 4 đến 50 ký tự");
+            }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                result.rejectValue("email", "NotEmpty", "Email không được để trống");
+            }
+            if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+                result.rejectValue("password", "NotEmpty", "Mật khẩu không được để trống");
+            }
+        } else {
+            if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+                result.rejectValue("fullName", "NotEmpty", "Họ tên không được để trống");
+            }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                result.rejectValue("email", "NotEmpty", "Email không được để trống");
+            }
+        }
+
         if (result.hasErrors()) {
             return "admin/user/form";
         }
+        
         try {
-            userService.createStaffUser(user, roleName);
-            redirectAttrs.addFlashAttribute("success", "Tạo tài khoản thành công!");
+            if (user.getId() == null) {
+                userService.createStaffUser(user, roleName);
+                redirectAttrs.addFlashAttribute("success", "Tạo tài khoản thành công!");
+            } else {
+                userService.updateUser(user, roleName);
+                redirectAttrs.addFlashAttribute("success", "Cập nhật tài khoản thành công!");
+            }
         } catch (Exception e) {
-            redirectAttrs.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+            model.addAttribute("error", "Lỗi: " + e.getMessage());
+            return "admin/user/form";
         }
         return "redirect:/admin/users";
     }

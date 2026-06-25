@@ -94,7 +94,7 @@
 
 .form-input-custom:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.15);
 }
 
 .form-input-custom[readonly] {
@@ -106,8 +106,8 @@
 
 /* Account Banner summary */
 .account-summary-banner {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    border: 1px solid rgba(37,99,235,0.15);
+    background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+    border: 1px solid rgba(13,148,136,0.15);
     border-radius: var(--radius-lg);
     padding: 32px 24px;
     text-align: center;
@@ -118,7 +118,7 @@
 .avatar-circle {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #0f766e 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -127,7 +127,7 @@
     font-weight: 800;
     color: white;
     margin: 0 auto 16px;
-    box-shadow: 0 8px 20px rgba(37,99,235,0.25);
+    box-shadow: 0 8px 20px rgba(13,148,136,0.25);
 }
 
 .account-name {
@@ -229,7 +229,7 @@
                 <div class="account-username">@${user.username}</div>
                 <div class="account-email">${user.email}</div>
                 
-                <div style="height:1px; background:rgba(37,99,235,0.15); margin:20px 0;"></div>
+                <div style="height:1px; background:rgba(13,148,136,0.15); margin:20px 0;"></div>
                 
                 <a href="${pageContext.request.contextPath}/orders" class="btn-outline" style="width:100%; justify-content:center; gap:8px;">
                     <i class="bi bi-bag-check-fill"></i> Xem đơn hàng của tôi

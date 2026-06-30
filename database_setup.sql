@@ -26,7 +26,7 @@ CREATE TABLE `categories` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `description` text,
-  `image_url` varchar(500) DEFAULT NULL,
+  `image_url` longtext,
   `active` tinyint(1) DEFAULT '1',
   `sort_order` int DEFAULT '0',
   `parent_id` bigint DEFAULT NULL,
@@ -239,7 +239,7 @@ DROP TABLE IF EXISTS `product_images`;
 CREATE TABLE `product_images` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `product_id` bigint NOT NULL,
-  `image_url` varchar(500) NOT NULL,
+  `image_url` longtext NOT NULL,
   `alt_text` varchar(200) DEFAULT NULL,
   `is_primary` tinyint(1) DEFAULT '0',
   `sort_order` int DEFAULT '0',
@@ -274,7 +274,7 @@ CREATE TABLE `products` (
   `short_description` varchar(500) DEFAULT NULL,
   `price` decimal(15,2) NOT NULL,
   `sale_price` decimal(15,2) DEFAULT NULL,
-  `thumbnail_url` varchar(500) DEFAULT NULL,
+  `thumbnail_url` longtext,
   `active` tinyint(1) DEFAULT '1',
   `is_featured` tinyint(1) DEFAULT '0',
   `category_id` bigint DEFAULT NULL,
@@ -400,7 +400,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `phone_number` varchar(15) DEFAULT NULL,
   `address` text,
-  `avatar_url` varchar(500) DEFAULT NULL,
+  `avatar_url` longtext,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -429,4 +429,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-30 13:58:15
+-- Dump completed on 2026-06-30 14:02:06

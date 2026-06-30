@@ -668,511 +668,108 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<!-- ============================================================
-     WELCOME POPUP — Chào mừng + Mã giảm giá
-     ============================================================ -->
+<!-- WELCOME POPUP -->
 <div id="welcomePopupOverlay" class="wlc-overlay" role="dialog" aria-modal="true" aria-labelledby="wlcTitle" style="display:none;">
   <div class="wlc-popup">
-    <!-- Close button -->
-    <button class="wlc-close" onclick="closeWelcomePopup()" aria-label="Đóng popup">
-      <i class="bi bi-x-lg"></i>
-    </button>
-
-    <!-- Left panel: decorative -->
     <div class="wlc-left">
-      <div class="wlc-left-inner">
-        <div class="wlc-icon-wrap">
-          <i class="bi bi-gift-fill"></i>
-        </div>
-        <div class="wlc-badge-text">Ưu đãi độc quyền</div>
-        <div class="wlc-discount-circle">
-          <span class="wlc-discount-num">10%</span>
-          <span class="wlc-discount-label">GIẢM GIÁ</span>
-        </div>
-        <p class="wlc-left-note">Cho đơn hàng đầu tiên của bạn</p>
-        <div class="wlc-features">
-          <div class="wlc-feature-item"><i class="bi bi-truck-front-fill"></i> Miễn phí vận chuyển</div>
-          <div class="wlc-feature-item"><i class="bi bi-shield-fill-check"></i> Bảo hành chính hãng</div>
-          <div class="wlc-feature-item"><i class="bi bi-arrow-repeat"></i> Đổi trả 30 ngày</div>
-        </div>
+      <div class="wlc-left-content">
+        <div class="wlc-tag">Ưu đãi thành viên mới</div>
+        <div class="wlc-big-number">10<span>%</span></div>
+        <p class="wlc-left-desc">Giảm giá cho đơn hàng<br>đầu tiên của bạn</p>
+        <div class="wlc-divider"></div>
+        <ul class="wlc-perks">
+          <li><i class="bi bi-check2"></i> Miễn phí giao hàng từ 500K</li>
+          <li><i class="bi bi-check2"></i> Đổi trả trong 30 ngày</li>
+          <li><i class="bi bi-check2"></i> Bảo hành chính hãng</li>
+        </ul>
       </div>
     </div>
-
-    <!-- Right panel: form -->
     <div class="wlc-right">
-      <div class="wlc-right-inner">
-        <div class="wlc-logo-wrap">
-          <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom" class="wlc-logo" onerror="this.style.display='none'">
-        </div>
-        <h2 class="wlc-title" id="wlcTitle">Chào mừng đến với Bincom! 🎉</h2>
-        <p class="wlc-subtitle">Đăng ký ngay để nhận <strong>mã giảm giá 10%</strong> cho đơn hàng đầu tiên của bạn.</p>
-
-        <!-- Form state 1: Email input -->
-        <div id="wlcFormState">
-          <div class="wlc-form-group">
-            <div class="wlc-input-wrap">
-              <i class="bi bi-envelope-fill wlc-input-icon"></i>
-              <input type="email" id="wlcEmail" class="wlc-input" placeholder="Nhập email của bạn..." autocomplete="email">
-            </div>
-            <button class="wlc-btn-submit" onclick="submitWelcomeEmail()" id="wlcSubmitBtn">
-              <span id="wlcBtnText">Nhận mã giảm giá</span>
-              <i class="bi bi-arrow-right-circle-fill"></i>
-            </button>
+      <button class="wlc-close-btn" onclick="closeWelcomePopup()" aria-label="Đóng"><i class="bi bi-x"></i></button>
+      <div class="wlc-right-content">
+        <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom" class="wlc-logo" onerror="this.style.display='none'">
+        <div id="wlcFormView">
+          <h2 class="wlc-title" id="wlcTitle">Chào mừng đến Bincom</h2>
+          <p class="wlc-desc">Để lại email, chúng tôi sẽ gửi mã giảm giá 10% cho đơn hàng đầu tiên của bạn.</p>
+          <div class="wlc-field-wrap">
+            <input type="email" id="wlcEmailInput" class="wlc-field" placeholder="Email của bạn" autocomplete="email">
           </div>
-          <p class="wlc-privacy"><i class="bi bi-lock-fill"></i> Chúng tôi cam kết không spam email của bạn.</p>
+          <button class="wlc-cta" id="wlcCta" onclick="submitWelcomeEmail()">
+            <span id="wlcCtaText">Nhận mã giảm giá</span>
+            <i class="bi bi-arrow-right" id="wlcCtaIcon"></i>
+          </button>
+          <p class="wlc-fine">Chúng tôi cam kết bảo mật email của bạn.</p>
+          <button class="wlc-later" onclick="closeWelcomePopup()">Để sau</button>
         </div>
-
-        <!-- Form state 2: Success -->
-        <div id="wlcSuccessState" style="display:none;">
-          <div class="wlc-success-wrap">
-            <div class="wlc-success-icon"><i class="bi bi-check-circle-fill"></i></div>
-            <h3 class="wlc-success-title">Thành công! 🎊</h3>
-            <p class="wlc-success-text">Cảm ơn bạn đã đăng ký. Mã giảm giá của bạn là:</p>
-            <div class="wlc-coupon-wrap" onclick="copyWelcomeCoupon()" title="Click để sao chép">
-              <span class="wlc-coupon-code" id="wlcCouponCode">BINCOM10</span>
-              <span class="wlc-coupon-copy"><i class="bi bi-copy"></i> Sao chép</span>
-            </div>
-            <p class="wlc-coupon-hint">Áp dụng khi thanh toán. HSD: 30 ngày.</p>
-            <button class="wlc-btn-shop" onclick="closeWelcomePopup()">
-              <i class="bi bi-bag-fill"></i> Mua sắm ngay
-            </button>
+        <div id="wlcSuccessView" style="display:none;">
+          <div class="wlc-check-wrap"><div class="wlc-check-circle"><i class="bi bi-check-lg"></i></div></div>
+          <h2 class="wlc-title">Cảm ơn bạn!</h2>
+          <p class="wlc-desc">Sử dụng mã bên dưới khi thanh toán để được giảm ngay 10%.</p>
+          <div class="wlc-code-box" onclick="copyWelcomeCode()" title="Nhấn để sao chép">
+            <span class="wlc-code" id="wlcCode">BINCOM10</span>
+            <span class="wlc-copy-hint"><i class="bi bi-copy"></i> Sao chép</span>
           </div>
+          <p class="wlc-expiry">Mã có hiệu lực trong 30 ngày.</p>
+          <button class="wlc-cta" onclick="closeWelcomePopup()">Mua sắm ngay</button>
         </div>
-
-        <button class="wlc-skip" onclick="closeWelcomePopup()">Bỏ qua, tôi không cần ưu đãi này</button>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-/* === WELCOME POPUP STYLES === */
-.wlc-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(6px);
-  z-index: 99999;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  animation: wlcFadeIn 0.35s ease;
-}
-@keyframes wlcFadeIn { from { opacity:0 } to { opacity:1 } }
-
-.wlc-popup {
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  width: 100%;
-  max-width: 760px;
-  max-height: 90vh;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-  position: relative;
-  animation: wlcSlideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes wlcSlideUp { from { transform:translateY(40px) scale(0.95); opacity:0 } to { transform:none; opacity:1 } }
-
-.wlc-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 10;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.9);
-  color: #374151;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: all 0.2s;
-}
-.wlc-close:hover { background:#f9fafb; transform:scale(1.1); color:#ef4444; }
-
-/* LEFT PANEL */
-.wlc-left {
-  width: 42%;
-  background: linear-gradient(145deg, #0d9488 0%, #0f766e 50%, #134e4a 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 36px 28px;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-}
-.wlc-left::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 180px; height: 180px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-}
-.wlc-left::after {
-  content: '';
-  position: absolute;
-  bottom: -30px; left: -30px;
-  width: 130px; height: 130px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.05);
-}
-.wlc-left-inner { text-align:center; position:relative; z-index:2; }
-
-.wlc-icon-wrap {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 12px;
-  font-size: 26px; color: #fff;
-  animation: wlcPulse 2s ease-in-out infinite;
-}
-@keyframes wlcPulse { 0%,100% { transform:scale(1) } 50% { transform:scale(1.08) } }
-
-.wlc-badge-text {
-  background: rgba(255,255,255,0.2);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 20px;
-  display: inline-block;
-  margin-bottom: 16px;
-}
-
-.wlc-discount-circle {
-  width: 110px; height: 110px;
-  border-radius: 50%;
-  border: 3px dashed rgba(255,255,255,0.5);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  margin: 0 auto 14px;
-  background: rgba(255,255,255,0.12);
-}
-.wlc-discount-num {
-  font-size: 32px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-}
-.wlc-discount-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.85);
-  letter-spacing: 2px;
-  margin-top: 2px;
-}
-.wlc-left-note {
-  color: rgba(255,255,255,0.8);
-  font-size: 12px;
-  margin: 0 0 20px;
-}
-.wlc-features { display:flex; flex-direction:column; gap:8px; }
-.wlc-feature-item {
-  display: flex; align-items: center; gap: 8px;
-  color: rgba(255,255,255,0.9);
-  font-size: 12px;
-  font-weight: 500;
-}
-.wlc-feature-item i { font-size: 13px; color: #6ee7b7; }
-
-/* RIGHT PANEL */
-.wlc-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  overflow-y: auto;
-}
-.wlc-right-inner {
-  padding: 36px 32px;
-  width: 100%;
-}
-.wlc-logo-wrap { margin-bottom: 16px; }
-.wlc-logo { height: 32px; object-fit: contain; }
-
-.wlc-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 8px;
-  line-height: 1.3;
-}
-.wlc-subtitle {
-  font-size: 13.5px;
-  color: #475569;
-  margin: 0 0 24px;
-  line-height: 1.6;
-}
-.wlc-subtitle strong { color: #0d9488; }
-
-.wlc-form-group { display:flex; flex-direction:column; gap:10px; }
-.wlc-input-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.wlc-input-icon {
-  position: absolute;
-  left: 14px;
-  color: #94a3b8;
-  font-size: 15px;
-  pointer-events: none;
-}
-.wlc-input {
-  width: 100%;
-  height: 48px;
-  padding: 0 16px 0 42px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 14px;
-  color: #0f172a;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #f8fafc;
-}
-.wlc-input:focus {
-  border-color: #0d9488;
-  box-shadow: 0 0 0 4px rgba(13,148,136,0.12);
-  background: #fff;
-}
-.wlc-input.wlc-error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.1); }
-
-.wlc-btn-submit {
-  height: 48px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #0d9488, #0f766e);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(13,148,136,0.35);
-}
-.wlc-btn-submit:hover { transform:translateY(-2px); box-shadow: 0 6px 20px rgba(13,148,136,0.45); }
-.wlc-btn-submit:active { transform:none; }
-.wlc-btn-submit:disabled { opacity:0.7; cursor:not-allowed; transform:none; }
-
-.wlc-privacy {
-  font-size: 11px;
-  color: #94a3b8;
-  margin: 8px 0 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.wlc-privacy i { color: #6ee7b7; }
-
-.wlc-skip {
-  display: block;
-  width: 100%;
-  margin-top: 20px;
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: underline;
-  text-align: center;
-  padding: 0;
-  transition: color 0.2s;
-}
-.wlc-skip:hover { color: #64748b; }
-
-/* SUCCESS STATE */
-.wlc-success-wrap { text-align: center; }
-.wlc-success-icon {
-  font-size: 52px;
-  color: #0d9488;
-  margin-bottom: 12px;
-  animation: wlcBounce 0.5s ease;
-}
-@keyframes wlcBounce { 0% { transform:scale(0) } 70% { transform:scale(1.1) } 100% { transform:scale(1) } }
-.wlc-success-title { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 8px; }
-.wlc-success-text { font-size: 13px; color: #475569; margin: 0 0 16px; }
-
-.wlc-coupon-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border: 2px dashed #16a34a;
-  border-radius: 12px;
-  padding: 14px 18px;
-  cursor: pointer;
-  margin-bottom: 8px;
-  transition: all 0.2s;
-}
-.wlc-coupon-wrap:hover { background: linear-gradient(135deg, #dcfce7, #bbf7d0); transform:scale(1.02); }
-.wlc-coupon-code {
-  font-size: 22px;
-  font-weight: 900;
-  color: #15803d;
-  letter-spacing: 3px;
-  font-family: monospace;
-}
-.wlc-coupon-copy {
-  font-size: 12px;
-  color: #16a34a;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.wlc-coupon-hint { font-size: 11px; color: #94a3b8; margin: 0 0 20px; }
-
-.wlc-btn-shop {
-  width: 100%;
-  height: 46px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #0d9488, #0f766e);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(13,148,136,0.35);
-}
-.wlc-btn-shop:hover { transform:translateY(-2px); }
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  .wlc-popup { flex-direction: column; max-height: 95vh; border-radius: 16px; }
-  .wlc-left { width: 100%; padding: 24px 20px; }
-  .wlc-discount-circle { width: 80px; height: 80px; }
-  .wlc-discount-num { font-size: 24px; }
-  .wlc-features { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-  .wlc-right-inner { padding: 24px 20px; }
-  .wlc-title { font-size: 18px; }
-  .wlc-icon-wrap { display:none; }
-  .wlc-left-note, .wlc-badge-text { display:none; }
-}
+.wlc-overlay{position:fixed;inset:0;background:rgba(10,14,22,.6);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;padding:16px;animation:wlcIn .3s ease both}
+@keyframes wlcIn{from{opacity:0}to{opacity:1}}
+.wlc-popup{display:flex;width:100%;max-width:720px;max-height:92vh;border-radius:16px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.32);animation:wlcUp .38s cubic-bezier(.22,.68,0,1.2) both}
+@keyframes wlcUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.wlc-left{width:44%;flex-shrink:0;background:#0a0e16;display:flex;align-items:center;justify-content:center;padding:48px 36px;position:relative;overflow:hidden}
+.wlc-left::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.22) 0%,transparent 70%);top:-70px;left:-70px;pointer-events:none}
+.wlc-left::after{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%);bottom:-50px;right:-40px;pointer-events:none}
+.wlc-left-content{position:relative;z-index:1;color:#fff}
+.wlc-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#0d9488;border:1px solid rgba(13,148,136,.4);padding:4px 10px;border-radius:4px;margin-bottom:28px}
+.wlc-big-number{font-size:86px;font-weight:900;line-height:1;color:#fff;letter-spacing:-4px;margin-bottom:6px}
+.wlc-big-number span{font-size:38px;font-weight:700;color:#0d9488;letter-spacing:0;vertical-align:super;margin-left:2px}
+.wlc-left-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;margin:0 0 22px}
+.wlc-divider{height:1px;background:rgba(255,255,255,.08);margin-bottom:20px}
+.wlc-perks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.wlc-perks li{font-size:12.5px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:8px}
+.wlc-perks li i{color:#0d9488;font-size:14px;flex-shrink:0}
+.wlc-right{flex:1;background:#fff;display:flex;align-items:center;position:relative;overflow-y:auto}
+.wlc-close-btn{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:#9ca3af;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:5}
+.wlc-close-btn:hover{border-color:#374151;color:#111827}
+.wlc-right-content{padding:48px 40px;width:100%}
+.wlc-logo{height:28px;object-fit:contain;display:block;margin-bottom:28px}
+.wlc-title{font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-.4px;margin:0 0 10px;line-height:1.3}
+.wlc-desc{font-size:13.5px;color:#6b7280;line-height:1.65;margin:0 0 26px}
+.wlc-field-wrap{margin-bottom:12px}
+.wlc-field{width:100%;height:46px;padding:0 16px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;color:#111827;outline:none;background:#f9fafb;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
+.wlc-field::placeholder{color:#9ca3af}
+.wlc-field:focus{border-color:#0d9488;background:#fff;box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.wlc-field.wlc-err{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.1)}
+.wlc-cta{width:100%;height:46px;border:none;border-radius:8px;background:#0f172a;color:#fff;font-size:14px;font-weight:600;letter-spacing:.2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .15s;margin-bottom:16px}
+.wlc-cta:hover{background:#0d9488}
+.wlc-cta:active{transform:scale(.98)}
+.wlc-cta:disabled{opacity:.6;cursor:not-allowed}
+.wlc-fine{font-size:11.5px;color:#9ca3af;text-align:center;margin:0 0 20px}
+.wlc-later{display:block;width:100%;background:none;border:none;font-size:12.5px;color:#9ca3af;cursor:pointer;text-align:center;padding:0;transition:color .2s}
+.wlc-later:hover{color:#374151}
+.wlc-check-wrap{margin-bottom:20px}
+.wlc-check-circle{width:52px;height:52px;border-radius:50%;background:#f0fdf4;border:1.5px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:22px;color:#059669;animation:wlcCheck .4s ease both}
+@keyframes wlcCheck{from{transform:scale(0)}60%{transform:scale(1.12)}to{transform:scale(1)}}
+.wlc-code-box{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:1.5px dashed #d1d5db;border-radius:8px;background:#f9fafb;cursor:pointer;margin-bottom:10px;transition:border-color .2s,background .2s}
+.wlc-code-box:hover{border-color:#0d9488;background:#f0fdfa}
+.wlc-code{font-family:'SF Mono','Fira Code',monospace;font-size:20px;font-weight:700;color:#0f172a;letter-spacing:3px}
+.wlc-copy-hint{font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;transition:color .2s}
+.wlc-code-box:hover .wlc-copy-hint{color:#0d9488}
+.wlc-expiry{font-size:11.5px;color:#9ca3af;margin:0 0 24px}
+@media(max-width:580px){.wlc-popup{flex-direction:column;border-radius:12px}.wlc-left{width:100%;padding:28px 28px 24px}.wlc-big-number{font-size:64px}.wlc-big-number span{font-size:30px}.wlc-perks,.wlc-divider,.wlc-left-desc{display:none}.wlc-right-content{padding:32px 24px}.wlc-logo{display:none}}
 </style>
 
 <script>
-(function() {
-  var POPUP_KEY = 'bincom_welcome_popup_shown_v1';
-  var DELAY_MS = 1800;
-
-  function showWelcomePopup() {
-    var overlay = document.getElementById('welcomePopupOverlay');
-    if (overlay) overlay.style.display = 'flex';
-  }
-
-  function isAdminPage() {
-    return window.location.pathname.indexOf('/admin') !== -1 ||
-           window.location.pathname.indexOf('/login') !== -1 ||
-           window.location.pathname.indexOf('/register') !== -1;
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    if (isAdminPage()) return;
-    if (sessionStorage.getItem(POPUP_KEY)) return;
-    setTimeout(showWelcomePopup, DELAY_MS);
-  });
-})();
-
-function closeWelcomePopup() {
-  var overlay = document.getElementById('welcomePopupOverlay');
-  if (overlay) {
-    overlay.style.animation = 'wlcFadeIn 0.25s ease reverse forwards';
-    setTimeout(function() { overlay.style.display = 'none'; }, 240);
-  }
-  sessionStorage.setItem('bincom_welcome_popup_shown_v1', '1');
-}
-
-function submitWelcomeEmail() {
-  var emailInput = document.getElementById('wlcEmail');
-  var email = emailInput ? emailInput.value.trim() : '';
-  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!email || !emailRegex.test(email)) {
-    emailInput.classList.add('wlc-error');
-    emailInput.focus();
-    emailInput.placeholder = 'Vui lòng nhập email hợp lệ!';
-    setTimeout(function() {
-      emailInput.classList.remove('wlc-error');
-      emailInput.placeholder = 'Nhập email của bạn...';
-    }, 2500);
-    return;
-  }
-
-  var btn = document.getElementById('wlcSubmitBtn');
-  var btnText = document.getElementById('wlcBtnText');
-  if (btn) btn.disabled = true;
-  if (btnText) btnText.textContent = 'Đang xử lý...';
-
-  // Simulate processing then show success
-  setTimeout(function() {
-    document.getElementById('wlcFormState').style.display = 'none';
-    var successState = document.getElementById('wlcSuccessState');
-    successState.style.display = 'block';
-    // Mark as shown so it doesn't re-appear
-    sessionStorage.setItem('bincom_welcome_popup_shown_v1', '1');
-  }, 900);
-}
-
-function copyWelcomeCoupon() {
-  var code = document.getElementById('wlcCouponCode');
-  if (!code) return;
-  var text = code.textContent;
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      showCopySuccess();
-    });
-  } else {
-    var tmp = document.createElement('textarea');
-    tmp.value = text;
-    document.body.appendChild(tmp);
-    tmp.select();
-    document.execCommand('copy');
-    document.body.removeChild(tmp);
-    showCopySuccess();
-  }
-}
-
-function showCopySuccess() {
-  if (typeof showToast === 'function') {
-    showToast('Đã sao chép mã: BINCOM10 🎉', 'success');
-  } else if (typeof Swal !== 'undefined') {
-    Swal.mixin({ toast:true, position:'top-end', showConfirmButton:false, timer:2500 })
-        .fire({ icon:'success', title:'Đã sao chép mã BINCOM10! 🎉' });
-  }
-}
-
-// Close on overlay click
-document.addEventListener('DOMContentLoaded', function() {
-  var overlay = document.getElementById('welcomePopupOverlay');
-  if (overlay) {
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) closeWelcomePopup();
-    });
-  }
-  // Close on Escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeWelcomePopup();
-  });
-});
+(function(){var K='bincom_wlc_v2';function bad(){var p=location.pathname;return p.indexOf('/admin')>-1||p.indexOf('/login')>-1||p.indexOf('/register')>-1}document.addEventListener('DOMContentLoaded',function(){if(bad()||sessionStorage.getItem(K))return;setTimeout(function(){var e=document.getElementById('welcomePopupOverlay');if(e)e.style.display='flex'},1600);var e=document.getElementById('welcomePopupOverlay');if(e)e.addEventListener('click',function(ev){if(ev.target===e)closeWelcomePopup()});document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeWelcomePopup()})})})();
+function closeWelcomePopup(){var e=document.getElementById('welcomePopupOverlay');if(!e)return;e.style.transition='opacity .25s';e.style.opacity='0';setTimeout(function(){e.style.display='none';e.style.opacity=''},260);sessionStorage.setItem('bincom_wlc_v2','1')}
+function submitWelcomeEmail(){var i=document.getElementById('wlcEmailInput'),email=i?i.value.trim():'';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){i.classList.add('wlc-err');i.focus();setTimeout(function(){i.classList.remove('wlc-err')},2000);return}var c=document.getElementById('wlcCta'),t=document.getElementById('wlcCtaText'),ic=document.getElementById('wlcCtaIcon');if(c)c.disabled=true;if(t)t.textContent='Đang xử lý...';if(ic)ic.style.display='none';setTimeout(function(){document.getElementById('wlcFormView').style.display='none';document.getElementById('wlcSuccessView').style.display='block';sessionStorage.setItem('bincom_wlc_v2','1')},800)}
+function copyWelcomeCode(){var code=((document.getElementById('wlcCode')||{}).textContent)||'BINCOM10',done=function(){if(typeof Swal!=='undefined')Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:2200}).fire({icon:'success',title:'Đã sao chép mã '+code})};if(navigator.clipboard)navigator.clipboard.writeText(code).then(done);else{var t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);done()}}
 </script>
 
 </body>

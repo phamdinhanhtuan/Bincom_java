@@ -10,7 +10,7 @@ services:
         value: root
       - key: DB_PASSWORD
         value: rootpassword
-  - type: pserv
+  - type: web
     name: bincom-db
     runtime: docker
     dockerfilePath: Dockerfile.db

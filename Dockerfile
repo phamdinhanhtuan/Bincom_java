@@ -17,8 +17,9 @@ WORKDIR /usr/local/tomcat
 # Remove default apps
 RUN rm -rf webapps/* webapps.dist
 
-# Tune Tomcat for performance: GZIP, threads, keep-alive
-RUN sed -i 's|<Connector port="8080" protocol="HTTP/1.1"|<Connector port="8080" protocol="HTTP/1.1"\n               maxThreads="200" minSpareThreads="20"\n               compression="on" compressionMinSize="1024"\n               compressibleMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json"\n               keepAliveTimeout="15000"|' conf/server.xml
+# Tune Tomcat for performance: GZIP, threads, keep-alive, and disable shutdown port
+RUN sed -i 's|<Server port="8005"|<Server port="-1"|' conf/server.xml && \
+    sed -i 's|<Connector port="8080" protocol="HTTP/1.1"|<Connector port="8080" protocol="HTTP/1.1"\n               maxThreads="200" minSpareThreads="20"\n               compression="on" compressionMinSize="1024"\n               compressibleMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json"\n               keepAliveTimeout="15000"|' conf/server.xml
 
 # Tune JVM: G1GC, smaller heap for free tier (512MB RAM)
 ENV JAVA_OPTS="-server -Xms128m -Xmx384m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+OptimizeStringConcat -Djava.security.egd=file:/dev/./urandom"

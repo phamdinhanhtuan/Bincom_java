@@ -16,6 +16,8 @@ services:
     dockerfilePath: Dockerfile.db
     plan: free
     envVars:
+      - key: PORT
+        value: "3306"
       - key: MYSQL_ROOT_PASSWORD
         value: rootpassword
       - key: MYSQL_DATABASE

@@ -40,3 +40,18 @@ Thumbs.db
 # Local Scripts
 kill_ports.sh
 run.sh
+
+# Dynamic Uploads (Keep only default images)
+src/main/webapp/uploads/products/*
+!src/main/webapp/uploads/products/.gitkeep
+!src/main/webapp/uploads/products/books.jpg
+!src/main/webapp/uploads/products/headphone.jpg
+!src/main/webapp/uploads/products/iphone15.jpg
+!src/main/webapp/uploads/products/iphone15_alt.jpg
+!src/main/webapp/uploads/products/jacket.jpg
+!src/main/webapp/uploads/products/nike.jpg
+!src/main/webapp/uploads/products/samsung_s24.jpg
+!src/main/webapp/uploads/products/watch.jpg
+
+src/main/webapp/uploads/categories/*
+!src/main/webapp/uploads/categories/.gitkeep

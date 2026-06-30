@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/ECommerceSystem"/>
+<Context path="/ECommerceSystem">
+    <Resources cachingAllowed="true" cacheMaxSize="102400" />
+</Context>

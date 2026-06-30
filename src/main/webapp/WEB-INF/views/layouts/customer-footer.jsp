@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <!-- WELCOME POPUP -->
-<div id="welcomePopupOverlay" class="wlc-overlay" role="dialog" aria-modal="true" aria-labelledby="wlcTitle" style="display:none;">
+<div id="welcomePopupOverlay" class="wlc-overlay" role="dialog" aria-modal="true" aria-labelledby="wlcTitle" style="display:none;position:fixed;inset:0;z-index:99999;">
   <div class="wlc-popup">
     <div class="wlc-left">
       <div class="wlc-left-content">
@@ -685,7 +685,7 @@ document.addEventListener("DOMContentLoaded", function() {
       </div>
     </div>
     <div class="wlc-right">
-      <button class="wlc-close-btn" onclick="closeWelcomePopup()" aria-label="Đóng"><i class="bi bi-x"></i></button>
+      <button class="wlc-close-btn" onclick="wlcClose()" aria-label="Đóng" type="button"><i class="bi bi-x"></i></button>
       <div class="wlc-right-content">
         <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="Bincom" class="wlc-logo" onerror="this.style.display='none'">
         <div id="wlcFormView">
@@ -694,23 +694,23 @@ document.addEventListener("DOMContentLoaded", function() {
           <div class="wlc-field-wrap">
             <input type="email" id="wlcEmailInput" class="wlc-field" placeholder="Email của bạn" autocomplete="email">
           </div>
-          <button class="wlc-cta" id="wlcCta" onclick="submitWelcomeEmail()">
+          <button class="wlc-cta" id="wlcCta" onclick="wlcSubmit()" type="button">
             <span id="wlcCtaText">Nhận mã giảm giá</span>
             <i class="bi bi-arrow-right" id="wlcCtaIcon"></i>
           </button>
           <p class="wlc-fine">Chúng tôi cam kết bảo mật email của bạn.</p>
-          <button class="wlc-later" onclick="closeWelcomePopup()">Để sau</button>
+          <button class="wlc-later" onclick="wlcClose()" type="button">Để sau</button>
         </div>
         <div id="wlcSuccessView" style="display:none;">
           <div class="wlc-check-wrap"><div class="wlc-check-circle"><i class="bi bi-check-lg"></i></div></div>
           <h2 class="wlc-title">Cảm ơn bạn!</h2>
           <p class="wlc-desc">Sử dụng mã bên dưới khi thanh toán để được giảm ngay 10%.</p>
-          <div class="wlc-code-box" onclick="copyWelcomeCode()" title="Nhấn để sao chép">
+          <div class="wlc-code-box" onclick="wlcCopy()" title="Nhấn để sao chép" style="cursor:pointer;">
             <span class="wlc-code" id="wlcCode">BINCOM10</span>
             <span class="wlc-copy-hint"><i class="bi bi-copy"></i> Sao chép</span>
           </div>
           <p class="wlc-expiry">Mã có hiệu lực trong 30 ngày.</p>
-          <button class="wlc-cta" onclick="closeWelcomePopup()">Mua sắm ngay</button>
+          <button class="wlc-cta" onclick="wlcClose()" type="button">Mua sắm ngay</button>
         </div>
       </div>
     </div>
@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 <style>
-.wlc-overlay{position:fixed;inset:0;background:rgba(10,14,22,.6);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;padding:16px;animation:wlcIn .3s ease both}
+.wlc-overlay{position:fixed;inset:0;background:rgba(10,14,22,.6);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;animation:wlcIn .3s ease both}
 @keyframes wlcIn{from{opacity:0}to{opacity:1}}
 .wlc-popup{display:flex;width:100%;max-width:720px;max-height:92vh;border-radius:16px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.32);animation:wlcUp .38s cubic-bezier(.22,.68,0,1.2) both}
 @keyframes wlcUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
@@ -766,10 +766,66 @@ document.addEventListener("DOMContentLoaded", function() {
 </style>
 
 <script>
-(function(){var K='bincom_wlc_v2';function bad(){var p=location.pathname;return p.indexOf('/admin')>-1||p.indexOf('/login')>-1||p.indexOf('/register')>-1}document.addEventListener('DOMContentLoaded',function(){if(bad()||sessionStorage.getItem(K))return;setTimeout(function(){var e=document.getElementById('welcomePopupOverlay');if(e)e.style.display='flex'},1600);var e=document.getElementById('welcomePopupOverlay');if(e)e.addEventListener('click',function(ev){if(ev.target===e)closeWelcomePopup()});document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeWelcomePopup()})})})();
-function closeWelcomePopup(){var e=document.getElementById('welcomePopupOverlay');if(!e)return;e.style.transition='opacity .25s';e.style.opacity='0';setTimeout(function(){e.style.display='none';e.style.opacity=''},260);sessionStorage.setItem('bincom_wlc_v2','1')}
-function submitWelcomeEmail(){var i=document.getElementById('wlcEmailInput'),email=i?i.value.trim():'';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){i.classList.add('wlc-err');i.focus();setTimeout(function(){i.classList.remove('wlc-err')},2000);return}var c=document.getElementById('wlcCta'),t=document.getElementById('wlcCtaText'),ic=document.getElementById('wlcCtaIcon');if(c)c.disabled=true;if(t)t.textContent='Đang xử lý...';if(ic)ic.style.display='none';setTimeout(function(){document.getElementById('wlcFormView').style.display='none';document.getElementById('wlcSuccessView').style.display='block';sessionStorage.setItem('bincom_wlc_v2','1')},800)}
-function copyWelcomeCode(){var code=((document.getElementById('wlcCode')||{}).textContent)||'BINCOM10',done=function(){if(typeof Swal!=='undefined')Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:2200}).fire({icon:'success',title:'Đã sao chép mã '+code})};if(navigator.clipboard)navigator.clipboard.writeText(code).then(done);else{var t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);done()}}
+(function(){
+  var K='bincom_wlc_v2';
+  function bad(){var p=location.pathname;return p.indexOf('/admin')>-1||p.indexOf('/login')>-1||p.indexOf('/register')>-1;}
+  document.addEventListener('DOMContentLoaded',function(){
+    if(bad()||sessionStorage.getItem(K))return;
+    setTimeout(function(){
+      var el=document.getElementById('welcomePopupOverlay');
+      if(el){el.style.display='flex';}
+    },1600);
+    document.addEventListener('keydown',function(ev){if(ev.key==='Escape')wlcClose();});
+    var ov=document.getElementById('welcomePopupOverlay');
+    if(ov){ov.addEventListener('click',function(ev){if(ev.target===ov)wlcClose();});}
+  });
+})();
+window.wlcClose=function(){
+  var el=document.getElementById('welcomePopupOverlay');
+  if(!el)return;
+  el.style.opacity='0';
+  el.style.transition='opacity 0.25s';
+  setTimeout(function(){el.style.display='none';el.style.opacity='';},260);
+  sessionStorage.setItem('bincom_wlc_v2','1');
+};
+window.wlcSubmit=function(){
+  var inp=document.getElementById('wlcEmailInput');
+  if(!inp)return;
+  var email=inp.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    inp.style.borderColor='#ef4444';
+    inp.focus();
+    setTimeout(function(){inp.style.borderColor='';},2000);
+    return;
+  }
+  var btn=document.getElementById('wlcCta');
+  var txt=document.getElementById('wlcCtaText');
+  if(btn)btn.disabled=true;
+  if(txt)txt.textContent='Đang xử lý...';
+  setTimeout(function(){
+    var fv=document.getElementById('wlcFormView');
+    var sv=document.getElementById('wlcSuccessView');
+    if(fv)fv.style.display='none';
+    if(sv)sv.style.display='block';
+    sessionStorage.setItem('bincom_wlc_v2','1');
+  },800);
+};
+window.wlcCopy=function(){
+  var codeEl=document.getElementById('wlcCode');
+  var code=codeEl?codeEl.textContent:'BINCOM10';
+  var done=function(){
+    if(typeof Swal!=='undefined'){
+      Swal.mixin({toast:true,position:'top-end',showConfirmButton:false,timer:2200})
+        .fire({icon:'success',title:'Đã sao chép: '+code});
+    }
+  };
+  if(navigator.clipboard){navigator.clipboard.writeText(code).then(done).catch(done);}
+  else{
+    var tmp=document.createElement('textarea');
+    tmp.value=code;document.body.appendChild(tmp);tmp.select();
+    document.execCommand('copy');document.body.removeChild(tmp);done();
+  }
+};
 </script>
 
 </body>

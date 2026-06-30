@@ -29,11 +29,16 @@
         <property name="jdbcUrl"         value="${db.url}"/>
         <property name="username"        value="${db.username}"/>
         <property name="password"        value="${db.password}"/>
-        <property name="maximumPoolSize" value="10"/>
-        <property name="minimumIdle"     value="2"/>
-        <property name="connectionTimeout" value="30000"/>
-        <property name="idleTimeout"     value="600000"/>
-        <property name="maxLifetime"     value="1800000"/>
+        <property name="maximumPoolSize" value="20"/>
+        <property name="minimumIdle"     value="5"/>
+        <property name="connectionTimeout" value="10000"/>
+        <property name="idleTimeout"     value="300000"/>
+        <property name="maxLifetime"     value="900000"/>
+        <property name="leakDetectionThreshold" value="5000"/>
+        <property name="cachePrepStmts" value="true"/>
+        <property name="prepStmtCacheSize" value="250"/>
+        <property name="prepStmtCacheSqlLimit" value="2048"/>
+        <property name="useServerPrepStmts" value="true"/>
     </bean>
 
     <!-- ===== Hibernate Session Factory ===== -->
@@ -45,10 +50,14 @@
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
                 <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.format_sql">false</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.jdbc.batch_size">30</prop>
+                <prop key="hibernate.order_inserts">true</prop>
+                <prop key="hibernate.order_updates">true</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
             </props>
         </property>
     </bean>

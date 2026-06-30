@@ -4,23 +4,9 @@ services:
     runtime: docker
     plan: free
     envVars:
-      - key: PORT
-        value: "10000"
       - key: DB_URL
-        value: jdbc:mysql://bincom-db:3306/ecommerce_db?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+        sync: false
       - key: DB_USERNAME
-        value: root
+        sync: false
       - key: DB_PASSWORD
-        value: rootpassword
-  - type: web
-    name: bincom-db
-    runtime: docker
-    dockerfilePath: Dockerfile.db
-    plan: free
-    envVars:
-      - key: PORT
-        value: "3306"
-      - key: MYSQL_ROOT_PASSWORD
-        value: rootpassword
-      - key: MYSQL_DATABASE
-        value: ecommerce_db
+        sync: false

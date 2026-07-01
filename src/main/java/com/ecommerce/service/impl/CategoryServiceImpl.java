@@ -15,13 +15,43 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired private CategoryRepository categoryRepository;
+    @Autowired private com.ecommerce.service.DatabaseBackupService databaseBackupService;
+
+    private void triggerBackup() {
+        if (org.springframework.transaction.support.TransactionSynchronizationManager.isSynchronizationActive()) {
+            org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
+                new org.springframework.transaction.support.TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        new Thread(() -> {
+                            try {
+                                databaseBackupService.exportDatabase();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }
+                }
+            );
+        } else {
+            new Thread(() -> {
+                try {
+                    databaseBackupService.exportDatabase();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
 
     @Override
     public Category save(Category category) {
         if (category.getParent() != null && category.getParent().getId() == null) {
             category.setParent(null);
         }
-        return categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
+        triggerBackup();
+        return saved;
     }
 
     @Override
@@ -45,7 +75,9 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.getSortOrder() != null) {
             existing.setSortOrder(category.getSortOrder());
         }
-        return categoryRepository.update(existing);
+        Category updated = categoryRepository.update(existing);
+        triggerBackup();
+        return updated;
     }
 
     @Autowired private org.hibernate.SessionFactory sessionFactory;
@@ -75,6 +107,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryRepository.deleteById(id);
+        triggerBackup();
     }
 
     @Override

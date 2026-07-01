@@ -96,21 +96,22 @@ public class OrderServiceImpl implements OrderService {
         order.setDiscountAmount(discountAmount);
         order.setTotalAmount(subtotal.add(shippingFee).subtract(discountAmount));
 
-        // Save order
-        Order savedOrder = orderRepository.save(order);
-
-        // Create payment record
+        // Create payment record and attach to order (CascadeType.ALL will persist it)
         Payment payment = new Payment();
-        payment.setOrder(savedOrder);
-        payment.setAmount(savedOrder.getTotalAmount());
-        payment.setStatus("COD".equals(paymentMethod) ? Payment.Status.PENDING : Payment.Status.PENDING);
+        payment.setOrder(order);
+        payment.setAmount(order.getTotalAmount());
         try {
             payment.setMethod(Payment.Method.valueOf(paymentMethod));
         } catch (IllegalArgumentException e) {
             payment.setMethod(Payment.Method.COD);
         }
+        payment.setStatus(Payment.Status.PENDING);
+        order.setPayment(payment);
 
-        // Send confirmation email (async)
+        // Save order (cascades to payment and order items)
+        Order savedOrder = orderRepository.save(order);
+
+        // Send confirmation email (best-effort, don't fail the order)
         try {
             emailService.sendOrderConfirmationEmail(customer.getEmail(), savedOrder);
         } catch (Exception e) {

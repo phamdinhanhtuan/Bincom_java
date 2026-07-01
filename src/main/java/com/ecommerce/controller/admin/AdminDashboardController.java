@@ -85,4 +85,38 @@ public class AdminDashboardController {
         }
         return "redirect:/admin/dashboard";
     }
+
+    @GetMapping("/download-backup")
+    public void downloadBackup(javax.servlet.http.HttpServletResponse response) {
+        try {
+            // First, trigger a fresh export to make sure database_setup.sql is up to date
+            databaseBackupService.exportDatabase();
+            
+            String userDir = System.getProperty("user.dir");
+            java.io.File file = new java.io.File(userDir, "database_setup.sql");
+            if (userDir.contains("/target") || userDir.contains("/src")) {
+                file = new java.io.File(userDir.substring(0, userDir.indexOf("/target")), "database_setup.sql");
+            }
+            
+            if (file.exists()) {
+                response.setContentType("application/sql");
+                response.setHeader("Content-Disposition", "attachment; filename=\"database_setup.sql\"");
+                try (java.io.InputStream is = new java.io.FileInputStream(file);
+                     java.io.OutputStream os = response.getOutputStream()) {
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                    os.flush();
+                }
+            } else {
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_NOT_FOUND, "Backup file not found.");
+            }
+        } catch (Exception e) {
+            try {
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            } catch (Exception ignored) {}
+        }
+    }
 }

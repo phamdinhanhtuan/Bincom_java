@@ -149,6 +149,10 @@
                class="btn btn-sm btn-primary ms-2" title="Lưu và đồng bộ Database vào database_setup.sql">
                 <i class="bi bi-cloud-arrow-up-fill"></i> Sao lưu dự án
             </a>
+            <a href="${pageContext.request.contextPath}/admin/download-backup"
+               class="btn btn-sm btn-success ms-2" title="Tải file database_setup.sql về máy">
+                <i class="bi bi-download"></i> Tải SQL
+            </a>
         </div>
     </header>
 

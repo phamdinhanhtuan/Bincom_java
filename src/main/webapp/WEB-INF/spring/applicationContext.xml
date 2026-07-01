@@ -35,6 +35,7 @@
         <property name="idleTimeout"     value="600000"/>
         <property name="maxLifetime"     value="1800000"/>
         <property name="leakDetectionThreshold" value="30000"/>
+        <property name="initializationFailTimeout" value="-1"/>
         <property name="dataSourceProperties">
             <props>
                 <prop key="cachePrepStmts">true</prop>

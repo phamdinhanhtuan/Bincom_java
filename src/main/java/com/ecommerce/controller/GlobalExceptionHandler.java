@@ -16,6 +16,22 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @org.springframework.web.bind.annotation.InitBinder
+    public void initBinder(org.springframework.web.bind.WebDataBinder binder) {
+        // Trim strings and convert empty strings to null
+        binder.registerCustomEditor(String.class, new org.springframework.beans.propertyeditors.StringTrimmerEditor(true));
+        
+        // Convert empty number fields to null instead of throwing TypeMismatchException
+        binder.registerCustomEditor(java.math.BigDecimal.class, 
+            new org.springframework.beans.propertyeditors.CustomNumberEditor(java.math.BigDecimal.class, true));
+        binder.registerCustomEditor(Integer.class, 
+            new org.springframework.beans.propertyeditors.CustomNumberEditor(Integer.class, true));
+        binder.registerCustomEditor(Long.class, 
+            new org.springframework.beans.propertyeditors.CustomNumberEditor(Long.class, true));
+        binder.registerCustomEditor(Double.class, 
+            new org.springframework.beans.propertyeditors.CustomNumberEditor(Double.class, true));
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(MaxUploadSizeExceededException exc, 
                                          RedirectAttributes redirectAttributes, 

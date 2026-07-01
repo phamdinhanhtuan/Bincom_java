@@ -83,4 +83,40 @@ public class Product {
         return salePrice != null && salePrice.compareTo(BigDecimal.ZERO) > 0
                 && salePrice.compareTo(price) < 0;
     }
+
+    public String getThumbnailUrl() {
+        if (thumbnailUrl == null || thumbnailUrl.trim().isEmpty()) {
+            return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23f4f6f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23999'>No Image</text></svg>";
+        }
+        if (thumbnailUrl.startsWith("data:")) {
+            return thumbnailUrl;
+        }
+        if (thumbnailUrl.startsWith("/uploads/")) {
+            String fileName = thumbnailUrl.substring(thumbnailUrl.lastIndexOf("/") + 1);
+            if (fileName.equals("books.jpg") || fileName.equals("headphone.jpg") || 
+                fileName.equals("iphone15.jpg") || fileName.equals("iphone15_alt.jpg") || 
+                fileName.equals("jacket.jpg") || fileName.equals("nike.jpg") || 
+                fileName.equals("samsung_s24.jpg") || fileName.equals("watch.jpg") ||
+                fileName.equals(".gitkeep")) {
+                return thumbnailUrl;
+            }
+            try {
+                String userDir = System.getProperty("user.dir");
+                java.io.File[] possiblePaths = {
+                    new java.io.File(userDir, "src/main/webapp" + thumbnailUrl),
+                    new java.io.File(userDir, "target/ECommerceSystem" + thumbnailUrl),
+                    new java.io.File(userDir, "webapps/ROOT" + thumbnailUrl),
+                    new java.io.File(userDir, "webapps/ECommerceSystem" + thumbnailUrl),
+                    new java.io.File(userDir, "work/Catalina/localhost/ECommerceSystem" + thumbnailUrl)
+                };
+                for (java.io.File file : possiblePaths) {
+                    if (file.exists() && file.isFile()) {
+                        return thumbnailUrl;
+                    }
+                }
+            } catch (Exception ignored) {}
+            return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23f4f6f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'>No Image</text></svg>";
+        }
+        return thumbnailUrl;
+    }
 }

@@ -20,6 +20,7 @@ public class AdminDashboardController {
     @Autowired private OrderService orderService;
     @Autowired private ProductService productService;
     @Autowired private UserService userService;
+    @Autowired private DatabaseBackupService databaseBackupService;
 
     @GetMapping({"", "/", "/dashboard"})
     public String dashboard(Model model) {
@@ -72,5 +73,16 @@ public class AdminDashboardController {
         response.put("data", data);
         response.put("year", currentYear);
         return response;
+    }
+
+    @GetMapping("/backup")
+    public String backupDatabase(org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
+        try {
+            databaseBackupService.exportDatabase();
+            redirectAttrs.addFlashAttribute("success", "Đã sao lưu toàn bộ dữ liệu và hình ảnh (Base64) vào file database_setup.sql thành công!");
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("error", "Lỗi sao lưu: " + e.getMessage());
+        }
+        return "redirect:/admin/dashboard";
     }
 }

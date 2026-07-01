@@ -145,6 +145,10 @@
                class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-eye"></i> Xem cửa hàng
             </a>
+            <a href="${pageContext.request.contextPath}/admin/backup"
+               class="btn btn-sm btn-primary ms-2" title="Lưu và đồng bộ Database vào database_setup.sql">
+                <i class="bi bi-cloud-arrow-up-fill"></i> Sao lưu dự án
+            </a>
         </div>
     </header>
 

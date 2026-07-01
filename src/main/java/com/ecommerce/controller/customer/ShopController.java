@@ -107,9 +107,12 @@ public class ShopController {
     public String productDetail(@PathVariable Long id, Model model, javax.servlet.http.HttpServletRequest request) {
         Product product = productService.findById(id)
             .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
-        List<Product> related = productService.findByCategory(product.getCategory().getId());
-        related.removeIf(p -> p.getId().equals(id));
-        if (related.size() > 4) related = related.subList(0, 4);
+        List<Product> related = new java.util.ArrayList<>();
+        if (product.getCategory() != null) {
+            related = productService.findByCategory(product.getCategory().getId());
+            related.removeIf(p -> p.getId().equals(id));
+            if (related.size() > 4) related = related.subList(0, 4);
+        }
 
         List<Review> reviews = reviewService.findByProductIdAndApproved(id, true);
         double avgRating = 5.0;

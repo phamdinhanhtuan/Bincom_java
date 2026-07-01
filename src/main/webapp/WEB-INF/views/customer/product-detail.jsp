@@ -47,12 +47,14 @@
         <!-- Product Info (Right) -->
         <div class="col-lg-7" style="display:flex; flex-direction:column; justify-content:space-between;">
             <div>
-                <div class="mb-2">
-                    <a href="${pageContext.request.contextPath}/shop?categoryId=${product.category.id}"
-                       style="color:var(--accent); font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">
-                        ${product.category.name}
-                    </a>
-                </div>
+                <c:if test="${not empty product.category}">
+                    <div class="mb-2">
+                        <a href="${pageContext.request.contextPath}/shop?categoryId=${product.category.id}"
+                           style="color:var(--accent); font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">
+                            ${product.category.name}
+                        </a>
+                    </div>
+                </c:if>
 
                 <div class="d-flex align-items-center justify-content-between gap-3 mb-3 flex-wrap">
                     <div>
@@ -126,8 +128,8 @@
                 </div>
 
                 <!-- Product Size Selection -->
-                <c:set var="catName" value="${fn:toLowerCase(product.category.name)}" />
-                <c:if test="${product.category.id == 11 || product.category.id == 12 || fn:contains(catName, 'quần áo') || fn:contains(catName, 'giày') || fn:contains(catName, 'dép')}">
+                <c:set var="catName" value="${not empty product.category ? fn:toLowerCase(product.category.name) : ''}" />
+                <c:if test="${not empty product.category && (product.category.id == 11 || product.category.id == 12 || fn:contains(catName, 'quần áo') || fn:contains(catName, 'giày') || fn:contains(catName, 'dép'))}">
                     <style>
                         .btn-size-option {
                             background: #fff;
@@ -256,7 +258,7 @@
                     </tr>
                     <tr>
                         <td>Danh mục</td>
-                        <td>${product.category.name}</td>
+                        <td>${not empty product.category ? product.category.name : 'Chưa phân loại'}</td>
                     </tr>
                     <tr>
                         <td>Trạng thái</td>
@@ -428,7 +430,7 @@
                             </c:choose>
                         </div>
                         <div class="cps-product-body">
-                            <div style="font-size:11px;color:var(--text-muted);font-weight:500;text-transform:uppercase;margin-bottom:4px;">${related.category.name}</div>
+                            <div style="font-size:11px;color:var(--text-muted);font-weight:500;text-transform:uppercase;margin-bottom:4px;">${not empty related.category ? related.category.name : 'Chưa phân loại'}</div>
                             <h3 class="cps-product-name" style="font-size:13.5px;font-weight:600;margin-bottom:6px;">
                                 <a href="${pageContext.request.contextPath}/shop/product/${related.id}" style="color:inherit;text-decoration:none;">${related.name}</a>
                             </h3>

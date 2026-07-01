@@ -164,18 +164,18 @@
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="sizeSelectorContainer">
                             <c:choose>
                                 <c:when test="${product.category.id == 11 || fn:contains(catName, 'quần áo')}">
-                                    <c:forEach var="sz" items="${['S', 'M', 'L', 'XL', 'XXL']}">
+                                    <c:forTokens var="sz" items="S,M,L,XL,XXL" delims=",">
                                         <button type="button" class="btn-size-option" onclick="selectProductSize('${sz}')" data-size="${sz}">
                                             ${sz}
                                         </button>
-                                    </c:forEach>
+                                    </c:forTokens>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach var="sz" items="${['35', '36', '37', '38', '39', '40', '41', '42', '43']}">
+                                    <c:forTokens var="sz" items="35,36,37,38,39,40,41,42,43" delims=",">
                                         <button type="button" class="btn-size-option" onclick="selectProductSize('${sz}')" data-size="${sz}">
                                             ${sz}
                                         </button>
-                                    </c:forEach>
+                                    </c:forTokens>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -446,6 +446,201 @@
 </div>
 
 <script>
+/* --- Size Guide Modal styles (injected here to keep it self-contained) --- */
+(function(){
+var s = document.createElement('style');
+s.textContent = `
+/* ===== SIZE GUIDE MODAL ===== */
+.sg-overlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); justify-content:center; align-items:center; padding:20px; }
+.sg-overlay.active { display:flex; animation: sgFadeIn .3s ease; }
+@keyframes sgFadeIn { from{opacity:0} to{opacity:1} }
+@keyframes sgSlideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.sg-modal {
+    background:#fff; border-radius:20px; max-width:520px; width:100%;
+    box-shadow:0 25px 60px rgba(0,0,0,.25); overflow:hidden; position:relative;
+    animation: sgSlideUp .4s cubic-bezier(.16,1,.3,1);
+}
+.sg-close {
+    position:absolute; top:12px; right:12px; z-index:2;
+    width:36px; height:36px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.85); cursor:pointer; font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    color:#333; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.sg-close:hover { background:#fff; transform:scale(1.1); }
+
+/* Header */
+.sg-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #f0932b 100%);
+    padding:28px 24px 20px; text-align:center; position:relative; overflow:hidden;
+}
+.sg-header::before {
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E");
+}
+.sg-header-emoji { font-size:48px; margin-bottom:6px; position:relative; animation: sgBounce 2s infinite; }
+@keyframes sgBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.sg-header h2 { color:#fff; font-size:26px; font-weight:800; margin:0; position:relative; text-shadow:0 2px 8px rgba(0,0,0,.15); }
+.sg-header p { color:rgba(255,255,255,.9); font-size:13px; margin:6px 0 0; position:relative; font-weight:500; }
+
+/* Countdown */
+.sg-countdown-wrap { display:flex; justify-content:center; gap:4px; margin-top:14px; position:relative; }
+.sg-cd-num { background:rgba(0,0,0,.35); color:#fff; padding:5px 9px; border-radius:6px; font-size:16px; font-weight:800; font-family:'Inter',monospace; min-width:36px; text-align:center; display:inline-block; }
+.sg-cd-sep { color:#fff; font-weight:800; font-size:16px; line-height:32px; }
+
+/* Body */
+.sg-body { padding:20px 24px 24px; }
+
+/* Coupon card */
+.sg-coupon {
+    background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+    border:2px dashed #ff6b6b; border-radius:14px; padding:16px;
+    text-align:center; margin-bottom:20px; position:relative;
+}
+.sg-coupon-badge { font-size:36px; font-weight:900; color:#ee5a24; line-height:1; }
+.sg-coupon-label { font-size:13px; color:#666; margin-top:2px; font-weight:600; }
+.sg-coupon-code {
+    display:inline-flex; align-items:center; gap:8px; margin-top:10px;
+    background:#fff; border:1.5px solid #ff6b6b; border-radius:8px; padding:6px 14px;
+}
+.sg-coupon-code span { font-weight:800; font-size:15px; color:#ee5a24; letter-spacing:1.5px; }
+.sg-coupon-code button {
+    background:linear-gradient(135deg,#ff6b6b,#ee5a24); color:#fff; border:none;
+    padding:5px 14px; border-radius:6px; font-size:12px; font-weight:700;
+    cursor:pointer; transition:all .2s;
+}
+.sg-coupon-code button:hover { transform:scale(1.05); }
+
+/* Tabs */
+.sg-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:10px; overflow:hidden; border:1px solid #e5e7eb; }
+.sg-tab {
+    flex:1; padding:10px; text-align:center; font-size:13px; font-weight:700;
+    cursor:pointer; background:#f9fafb; color:#6b7280; transition:all .2s; border:none;
+}
+.sg-tab.active { background:linear-gradient(135deg,#ff6b6b,#ee5a24); color:#fff; }
+.sg-tab:hover:not(.active) { background:#f3f4f6; }
+
+/* Table */
+.sg-table-wrap { max-height:220px; overflow-y:auto; border-radius:10px; border:1px solid #e5e7eb; }
+.sg-table-wrap::-webkit-scrollbar { width:4px; }
+.sg-table-wrap::-webkit-scrollbar-thumb { background:#ddd; border-radius:4px; }
+.sg-table { width:100%; border-collapse:collapse; font-size:13px; }
+.sg-table thead th {
+    background:linear-gradient(135deg,#1a1a2e,#16213e); color:#fff;
+    padding:10px 12px; font-weight:700; position:sticky; top:0; z-index:1;
+    text-align:center; font-size:12px; text-transform:uppercase; letter-spacing:.5px;
+}
+.sg-table tbody td { padding:9px 12px; text-align:center; border-bottom:1px solid #f3f4f6; color:#374151; font-weight:500; }
+.sg-table tbody tr:hover { background:#fef2f2; }
+.sg-table tbody tr:nth-child(even) { background:#fafafa; }
+.sg-table tbody tr:nth-child(even):hover { background:#fef2f2; }
+
+/* CTA */
+.sg-cta {
+    display:block; width:100%; margin-top:18px; padding:15px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #f0932b 100%);
+    color:#fff; border:none; border-radius:14px; font-size:16px; font-weight:800;
+    cursor:pointer; transition:all .3s; text-align:center;
+    box-shadow: 0 4px 15px rgba(238,90,36,.3);
+}
+.sg-cta:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(238,90,36,.4); }
+
+@media(max-width:480px) {
+    .sg-modal { border-radius:16px; }
+    .sg-header { padding:20px 16px 16px; }
+    .sg-header h2 { font-size:22px; }
+    .sg-body { padding:16px; }
+    .sg-coupon-badge { font-size:28px; }
+}
+`;
+document.head.appendChild(s);
+})();
+</script>
+
+<!-- ===== SIZE GUIDE MODAL (SHEIN-style) ===== -->
+<div id="sizeGuideModal" class="sg-overlay" onclick="if(event.target===this)closeSizeGuide()">
+    <div class="sg-modal">
+        <button class="sg-close" onclick="closeSizeGuide()" aria-label="Đóng">&times;</button>
+
+        <!-- Header with gradient & emoji -->
+        <div class="sg-header">
+            <div class="sg-header-emoji">🎁</div>
+            <h2>Chúc mừng!</h2>
+            <p>Chọn đúng size — nhận ngay ưu đãi đặc biệt</p>
+            <div class="sg-countdown-wrap" id="sgCountdown">
+                <span class="sg-cd-num">23</span><span class="sg-cd-sep">:</span>
+                <span class="sg-cd-num">59</span><span class="sg-cd-sep">:</span>
+                <span class="sg-cd-num">59</span>
+            </div>
+        </div>
+
+        <div class="sg-body">
+            <!-- Coupon -->
+            <div class="sg-coupon">
+                <div class="sg-coupon-badge">-15%</div>
+                <div class="sg-coupon-label">Gói phiếu giảm giá cho đơn hàng đầu tiên</div>
+                <div class="sg-coupon-code">
+                    <span>SIZE15</span>
+                    <button id="sgCopyBtn" onclick="copySizeGuideCode()">Sao chép mã</button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="sg-tabs">
+                <button class="sg-tab active" onclick="switchSizeTab('clothing',this)">👕 Quần áo</button>
+                <button class="sg-tab" onclick="switchSizeTab('shoes',this)">👟 Giày dép</button>
+            </div>
+
+            <!-- Clothing Table -->
+            <div id="sgTabClothing" class="sg-table-wrap">
+                <table class="sg-table">
+                    <thead><tr><th>Size</th><th>Cân nặng</th><th>Chiều cao</th><th>Ngực</th><th>Eo</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>S</strong></td><td>45–55 kg</td><td>155–162 cm</td><td>82–86 cm</td><td>64–68 cm</td></tr>
+                        <tr><td><strong>M</strong></td><td>55–65 kg</td><td>160–168 cm</td><td>86–90 cm</td><td>68–72 cm</td></tr>
+                        <tr><td><strong>L</strong></td><td>65–75 kg</td><td>165–175 cm</td><td>90–96 cm</td><td>72–78 cm</td></tr>
+                        <tr><td><strong>XL</strong></td><td>75–85 kg</td><td>170–180 cm</td><td>96–102 cm</td><td>78–84 cm</td></tr>
+                        <tr><td><strong>XXL</strong></td><td>> 85 kg</td><td>175–185 cm</td><td>102–108 cm</td><td>84–90 cm</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Shoes Table -->
+            <div id="sgTabShoes" class="sg-table-wrap" style="display:none;">
+                <table class="sg-table">
+                    <thead><tr><th>Size</th><th>Chiều dài bàn chân</th><th>EU</th><th>US (Nam)</th><th>US (Nữ)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>35</strong></td><td>22.5 cm</td><td>35</td><td>4</td><td>5</td></tr>
+                        <tr><td><strong>36</strong></td><td>23.0 cm</td><td>36</td><td>4.5</td><td>5.5</td></tr>
+                        <tr><td><strong>37</strong></td><td>23.5 cm</td><td>37</td><td>5</td><td>6</td></tr>
+                        <tr><td><strong>38</strong></td><td>24.0 cm</td><td>38</td><td>6</td><td>7</td></tr>
+                        <tr><td><strong>39</strong></td><td>24.5 cm</td><td>39</td><td>6.5</td><td>7.5</td></tr>
+                        <tr><td><strong>40</strong></td><td>25.0 cm</td><td>40</td><td>7</td><td>8</td></tr>
+                        <tr><td><strong>41</strong></td><td>25.5 cm</td><td>41</td><td>8</td><td>9</td></tr>
+                        <tr><td><strong>42</strong></td><td>26.0 cm</td><td>42</td><td>8.5</td><td>9.5</td></tr>
+                        <tr><td><strong>43</strong></td><td>26.5 cm</td><td>43</td><td>9.5</td><td>10.5</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CTA button -->
+            <button class="sg-cta" onclick="closeSizeGuide()">
+                Đã hiểu — Chọn size ngay!
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchSizeTab(tab, el) {
+    document.querySelectorAll('.sg-tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('sgTabClothing').style.display = tab==='clothing' ? '' : 'none';
+    document.getElementById('sgTabShoes').style.display = tab==='shoes' ? '' : 'none';
+}
+</script>
+
 function updateActiveThumb(img) {
     var thumbs = img.parentNode.querySelectorAll('img');
     thumbs.forEach(t => t.style.borderColor = 'var(--border)');
@@ -565,7 +760,42 @@ function selectProductSize(size) {
 }
 
 function showSizeGuide() {
-    alert("Hướng dẫn chọn cỡ:\n- Quần áo: S (45-55kg), M (55-65kg), L (65-75kg), XL (75-85kg), XXL (>85kg).\n- Giày dép: 38 (24cm), 39 (24.5cm), 40 (25cm), 41 (25.5cm), 42 (26cm), 43 (26.5cm).");
+    document.getElementById('sizeGuideModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    startSizeGuideCountdown();
+}
+function closeSizeGuide() {
+    document.getElementById('sizeGuideModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+function startSizeGuideCountdown() {
+    var end = new Date().getTime() + 24*60*60*1000;
+    function tick() {
+        var now = new Date().getTime();
+        var d = end - now;
+        if (d <= 0) return;
+        var h = Math.floor(d/(1000*60*60));
+        var m = Math.floor((d%(1000*60*60))/(1000*60));
+        var s = Math.floor((d%(1000*60))/1000);
+        var el = document.getElementById('sgCountdown');
+        if (el) el.innerHTML =
+            '<span class="sg-cd-num">' + String(h).padStart(2,'0') + '</span>' +
+            '<span class="sg-cd-sep">:</span>' +
+            '<span class="sg-cd-num">' + String(m).padStart(2,'0') + '</span>' +
+            '<span class="sg-cd-sep">:</span>' +
+            '<span class="sg-cd-num">' + String(s).padStart(2,'0') + '</span>';
+        setTimeout(tick, 1000);
+    }
+    tick();
+}
+function copySizeGuideCode() {
+    var code = 'SIZE15';
+    navigator.clipboard.writeText(code).then(function() {
+        var btn = document.getElementById('sgCopyBtn');
+        btn.textContent = 'Đã sao chép!';
+        btn.style.background = '#16a34a';
+        setTimeout(function() { btn.textContent = 'Sao chép mã'; btn.style.background = ''; }, 2000);
+    });
 }
 
 /* ===== REVIEWS & RATINGS ===== */

@@ -11,6 +11,7 @@
     <!-- ===== Public Resources (no auth required) ===== -->
     <http pattern="/resources/**" security="none"/>
     <http pattern="/uploads/**"   security="none"/>
+    <http pattern="/health"       security="none"/>
 
     <!-- ===== Admin Security ===== -->
     <http pattern="/admin/**" use-expressions="true">

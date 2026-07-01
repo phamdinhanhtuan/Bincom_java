@@ -32,12 +32,9 @@
         <property name="maximumPoolSize" value="3"/>
         <property name="minimumIdle"     value="1"/>
         <property name="connectionTimeout" value="30000"/>
-        <property name="idleTimeout"     value="300000"/>
-        <property name="maxLifetime"     value="600000"/>
-        <property name="keepaliveTime"   value="120000"/>
-        <property name="validationTimeout" value="5000"/>
-        <property name="leakDetectionThreshold" value="60000"/>
-        <property name="connectionTestQuery" value="SELECT 1"/>
+        <property name="idleTimeout"     value="600000"/>
+        <property name="maxLifetime"     value="1800000"/>
+        <property name="leakDetectionThreshold" value="30000"/>
         <property name="dataSourceProperties">
             <props>
                 <prop key="cachePrepStmts">true</prop>
@@ -65,7 +62,6 @@
                 <prop key="hibernate.order_inserts">true</prop>
                 <prop key="hibernate.order_updates">true</prop>
                 <prop key="hibernate.generate_statistics">false</prop>
-                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
             </props>
         </property>
     </bean>

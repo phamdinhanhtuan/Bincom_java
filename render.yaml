@@ -3,7 +3,6 @@ services:
     name: bincom-ecommerce
     runtime: docker
     plan: free
-    healthCheckPath: /health
     envVars:
       - key: DB_URL
         sync: false

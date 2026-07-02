@@ -5,8 +5,12 @@
 <div class="product-card h-100">
     <div class="product-img-wrap">
         <c:choose>
+            <c:when test="${not empty product.thumbnailUrl && product.thumbnailUrl.startsWith('data:')}">
+                <img src="${product.thumbnailUrl}"
+                     alt="${product.name}" loading="lazy">
+            </c:when>
             <c:when test="${not empty product.thumbnailUrl}">
-                <img src="${pageContext.request.contextPath}${product.thumbnailUrl}"
+                <img src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}"
                      alt="${product.name}" loading="lazy">
             </c:when>
             <c:otherwise>

@@ -103,8 +103,12 @@
                         <td>
                             <div class="d-flex align-items-center gap-3">
                                 <c:choose>
+                                    <c:when test="${not empty product.thumbnailUrl && product.thumbnailUrl.startsWith('data:')}">
+                                        <img src="${product.thumbnailUrl}"
+                                             class="product-thumb" alt="${product.name}">
+                                    </c:when>
                                     <c:when test="${not empty product.thumbnailUrl}">
-                                        <img src="${pageContext.request.contextPath}${product.thumbnailUrl}"
+                                        <img src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}"
                                              class="product-thumb" alt="${product.name}">
                                     </c:when>
                                     <c:otherwise>

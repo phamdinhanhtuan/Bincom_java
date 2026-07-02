@@ -394,11 +394,16 @@
                     <!-- Thumbnail preview -->
                     <div id="thumbContainer">
                         <c:choose>
-                            <c:when test="${not empty product.thumbnailUrl}">
+                            <c:when test="${not empty product.id && not empty product.thumbnailUrl}">
                                 <div class="thumb-preview-container">
-                                    <img id="thumbImg"
-                                         src="${pageContext.request.contextPath}${product.thumbnailUrl}"
-                                         class="thumb-preview-custom">
+                                    <c:choose>
+                                        <c:when test="${product.thumbnailUrl.startsWith('data:')}">
+                                            <img id="thumbImg" src="${product.thumbnailUrl}" class="thumb-preview-custom">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img id="thumbImg" src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}" class="thumb-preview-custom">
+                                        </c:otherwise>
+                                    </c:choose>
                                     <button type="button" class="delete-btn" style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s;" onclick="deleteThumbnail(${product.id})" title="Xóa ảnh đại diện">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
@@ -444,7 +449,14 @@
                         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px;" id="existingImagesList">
                             <c:forEach var="img" items="${product.images}">
                                 <div class="existing-image-container" id="img-container-${img.id}">
-                                    <img src="${pageContext.request.contextPath}${img.imageUrl}" alt="${img.altText}">
+                                    <c:choose>
+                                        <c:when test="${img.imageUrl.startsWith('data:')}">
+                                            <img src="${img.imageUrl}" alt="Ảnh sản phẩm">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}${img.imageUrl}" alt="Ảnh sản phẩm">
+                                        </c:otherwise>
+                                    </c:choose>
                                     <button type="button" class="delete-btn" onclick="deleteExistingImage(${img.id})" title="Xóa ảnh này">
                                         <i class="bi bi-x"></i>
                                     </button>

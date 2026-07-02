@@ -200,6 +200,29 @@
     font-weight: 800;
     color: #0f172a;
   }
+  .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 24px;
+    border: 1.5px solid #ef4444 !important;
+    color: #ef4444 !important;
+    background: transparent !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+  }
+  .btn-cancel:hover {
+    background: #ef4444 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+    transform: translateY(-1px);
+  }
 </style>
 
 <div class="container-shop" style="padding-top:40px; padding-bottom:80px;">
@@ -348,7 +371,7 @@
                         <div class="product-item">
                             <c:choose>
                                 <c:when test="${not empty item.productThumbnail}">
-                                    <img src="${pageContext.request.contextPath}${item.productThumbnail}"
+                                    <img src="${item.productThumbnail.startsWith('data:') ? '' : pageContext.request.contextPath}${item.productThumbnail}"
                                          style="width:64px;height:80px;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0;flex-shrink:0;">
                                 </c:when>
                                 <c:otherwise>
@@ -442,13 +465,10 @@
 
             <!-- Action Button -->
             <c:if test="${order.status == 'PENDING'}">
-                <form action="${pageContext.request.contextPath}/orders/${order.orderCode}/cancel" method="post" style="margin-top: 16px;">
+                <form action="${pageContext.request.contextPath}/orders/${order.orderCode}/cancel" method="post" style="margin-top: 16px;"
+                      onsubmit="return confirm('Bạn có chắc chắn muốn huỷ đơn hàng này không?')">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn-outline" 
-                            style="width: 100%; justify-content: center; border-color: #ef4444; color: #ef4444; border-radius: 12px; padding: 12px; font-weight: 700; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; background:transparent; cursor:pointer;"
-                            onmouseover="this.style.background='#ef4444'; this.style.color='#ffffff'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.25)';"
-                            onmouseout="this.style.background='transparent'; this.style.color='#ef4444'; this.style.boxShadow='none';"
-                            onclick="return confirm('Bạn có chắc chắn muốn huỷ đơn hàng này không?')">
+                    <button type="submit" class="btn-cancel">
                         <i class="bi bi-x-circle"></i> Hủy đơn hàng
                     </button>
                 </form>

@@ -166,8 +166,16 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <c:if test="${not empty product.thumbnailUrl}">
-                                            <img src="${pageContext.request.contextPath}${product.thumbnailUrl}"
-                                                 class="product-thumb" alt="${product.name}">
+                                            <c:choose>
+                                                <c:when test="${product.thumbnailUrl.startsWith('data:')}">
+                                                    <img src="${product.thumbnailUrl}"
+                                                         class="product-thumb" alt="${product.name}">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}"
+                                                         class="product-thumb" alt="${product.name}">
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:if>
                                         <span class="fw-medium">${product.name}</span>
                                     </div>

@@ -13,9 +13,15 @@
         <div class="col-lg-5">
             <div style="border-radius:16px; overflow:hidden; background:#fff; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border:1px solid var(--border);">
                 <c:choose>
+                    <c:when test="${not empty product.thumbnailUrl && product.thumbnailUrl.startsWith('data:')}">
+                        <img id="mainImage"
+                             src="${product.thumbnailUrl}"
+                             alt="${product.name}"
+                             style="width:100%; height:100%; object-fit:contain; padding:16px;">
+                    </c:when>
                     <c:when test="${not empty product.thumbnailUrl}">
                         <img id="mainImage"
-                             src="${pageContext.request.contextPath}${product.thumbnailUrl}"
+                             src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}"
                              alt="${product.name}"
                              style="width:100%; height:100%; object-fit:contain; padding:16px;">
                     </c:when>
@@ -30,15 +36,34 @@
             <c:if test="${not empty product.images || not empty product.thumbnailUrl}">
                 <div class="d-flex gap-2 mt-3 flex-wrap">
                     <c:if test="${not empty product.thumbnailUrl}">
-                        <img src="${pageContext.request.contextPath}${product.thumbnailUrl}"
-                             onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
-                             style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--accent); cursor:pointer;" alt="">
+                        <c:choose>
+                            <c:when test="${product.thumbnailUrl.startsWith('data:')}">
+                                <img src="${product.thumbnailUrl}"
+                                     onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
+                                     style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--accent); cursor:pointer;" alt="">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}"
+                                     onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
+                                     style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--accent); cursor:pointer;" alt="">
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
                     <c:forEach var="img" items="${product.images}">
-                        <img src="${pageContext.request.contextPath}${img.imageUrl}"
-                             onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
-                             style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--border); cursor:pointer; transition:border-color 0.2s;"
-                             alt="${img.altText}">
+                        <c:choose>
+                            <c:when test="${img.imageUrl.startsWith('data:')}">
+                                <img src="${img.imageUrl}"
+                                     onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
+                                     style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--border); cursor:pointer; transition:border-color 0.2s;"
+                                     alt="Ảnh sản phẩm">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}${img.imageUrl}"
+                                     onclick="document.getElementById('mainImage').src=this.src; updateActiveThumb(this)"
+                                     style="width:64px; height:64px; object-fit:contain; padding:4px; background:#fff; border-radius:8px; border:2px solid var(--border); cursor:pointer; transition:border-color 0.2s;"
+                                     alt="Ảnh sản phẩm">
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </div>
             </c:if>
@@ -419,8 +444,11 @@
                                 <span class="cps-product-badge">SALE</span>
                             </c:if>
                             <c:choose>
+                                <c:when test="${not empty related.thumbnailUrl && related.thumbnailUrl.startsWith('data:')}">
+                                    <img src="${related.thumbnailUrl}" alt="${related.name}"/>
+                                </c:when>
                                 <c:when test="${not empty related.thumbnailUrl}">
-                                    <img src="${pageContext.request.contextPath}${related.thumbnailUrl}" alt="${related.name}" onerror="this.src='https://placehold.co/300x400?text=Bincom'"/>
+                                    <img src="${related.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${related.thumbnailUrl}" alt="${related.name}" onerror="this.src='https://placehold.co/300x400?text=Bincom'"/>
                                 </c:when>
                                 <c:otherwise>
                                     <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f1f5f9;color:#94a3b8;font-size:30px;">
@@ -641,7 +669,6 @@ function switchSizeTab(tab, el) {
     document.getElementById('sgTabClothing').style.display = tab==='clothing' ? '' : 'none';
     document.getElementById('sgTabShoes').style.display = tab==='shoes' ? '' : 'none';
 }
-</script>
 
 function updateActiveThumb(img) {
     var thumbs = img.parentNode.querySelectorAll('img');

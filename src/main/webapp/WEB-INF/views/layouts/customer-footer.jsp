@@ -282,6 +282,11 @@ function loadWishlistItems() {
   var container = document.getElementById('wishlistModalBody');
   if (!container) return;
   
+  // Clean IDs list to avoid type mismatch on server
+  wishlist = wishlist.filter(function(id) {
+    return id !== null && id !== undefined && id !== '' && !isNaN(id);
+  });
+  
   if (wishlist.length === 0) {
     container.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: #64748b;">' +
                           '  <i class="bi bi-heart-break" style="font-size: 48px; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>' +
@@ -294,9 +299,14 @@ function loadWishlistItems() {
   
   var url = '${pageContext.request.contextPath}/shop/api/wishlist?ids=' + wishlist.join(',');
   fetch(url)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('HTTP error ' + response.status);
+      }
+      return response.json();
+    })
     .then(data => {
-      if (data.length === 0) {
+      if (!data || data.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: #64748b;">' +
                               '  Danh sách yêu thích của bạn đang trống.' +
                               '</div>';
@@ -310,10 +320,10 @@ function loadWishlistItems() {
         if (p.onSale) {
           oldPriceHtml = '<span style="text-decoration: line-through; color: #94a3b8; font-size: 12px; margin-left: 6px;">' + new Intl.NumberFormat('vi-VN').format(p.price) + '₫</span>';
         }
-        var thumb = p.thumbnailUrl ? '${pageContext.request.contextPath}' + p.thumbnailUrl : 'https://placehold.co/80x80?text=Bincom';
+        var thumb = p.thumbnailUrl ? (p.thumbnailUrl.indexOf('data:') === 0 ? p.thumbnailUrl : '${pageContext.request.contextPath}' + p.thumbnailUrl) : 'https://placehold.co/80x80?text=Bincom';
         
         html += '<div style="display: flex; gap: 16px; align-items: center; padding: 12px; border: 1px solid #f1f5f9; border-radius: 8px; transition: background 0.2s;">' +
-                '  <img src="' + thumb + '" alt="' + p.name + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #f1f5f9;">' +
+                '  <img src="' + thumb + '" alt="' + p.name + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #f1f5f9;" onerror="this.src=\'https://placehold.co/80x80?text=Bincom\'">' +
                 '  <div style="flex-grow: 1; min-width: 0;">' +
                 '    <h4 style="margin: 0 0 4px; font-size: 14px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' +
                 '      <a href="${pageContext.request.contextPath}/shop/product/' + p.id + '" style="color: inherit; text-decoration: none;" onclick="closeWishlistModal()">' + p.name + '</a>' +

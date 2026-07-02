@@ -126,7 +126,7 @@
             <div style="width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#f5f3ff,#ede9fe);display:flex;align-items:center;justify-content:center;">
               <c:choose>
                 <c:when test="${not empty item.thumbnailUrl}">
-                  <img src="${pageContext.request.contextPath}${item.thumbnailUrl}"
+                  <img src="${item.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${item.thumbnailUrl}"
                        style="width:100%;height:100%;object-fit:cover;"
                        alt="${item.productName}">
                 </c:when>

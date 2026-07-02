@@ -144,8 +144,11 @@
                   </c:if>
                   <span class="cps-product-badge-right">Trả góp 0%</span>
                   <c:choose>
+                    <c:when test="${not empty product.thumbnailUrl && product.thumbnailUrl.startsWith('data:')}">
+                      <img src="${product.thumbnailUrl}" alt="${product.name} — Mua chính hãng tại Bincom" loading="lazy" width="200" height="200"/>
+                    </c:when>
                     <c:when test="${not empty product.thumbnailUrl}">
-                      <img src="${pageContext.request.contextPath}${product.thumbnailUrl}" alt="${product.name} — Mua chính hãng tại Bincom" loading="lazy" width="200" height="200" onerror="this.src='https://placehold.co/200x200?text=Bincom'"/>
+                      <img src="${product.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${product.thumbnailUrl}" alt="${product.name} — Mua chính hãng tại Bincom" loading="lazy" width="200" height="200" onerror="this.src='https://placehold.co/200x200?text=Bincom'"/>
                     </c:when>
                     <c:otherwise>
                       <img src="https://placehold.co/200x200?text=${product.name}" alt="${product.name}" loading="lazy" width="200" height="200"/>

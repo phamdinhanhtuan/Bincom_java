@@ -51,7 +51,7 @@
                     <div style="width:80px;height:100px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
                       <c:choose>
                         <c:when test="${not empty item.thumbnailUrl}">
-                           <img src="${pageContext.request.contextPath}${item.thumbnailUrl}"
+                           <img src="${item.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${item.thumbnailUrl}"
                                style="width:100%;height:100%;object-fit:cover;"
                                alt="${item.productName}">
                         </c:when>

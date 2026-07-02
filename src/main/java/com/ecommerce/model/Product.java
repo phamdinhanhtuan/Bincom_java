@@ -1,5 +1,6 @@
 package com.ecommerce.model;
 
+import com.ecommerce.util.ImageUrlHelper;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -72,51 +73,38 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Helper: get effective price
+    // -------------------------------------------------------------------------
+    // Business logic helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns the effective selling price.
+     * Uses {@code salePrice} when it is set, positive, and less than {@code price};
+     * otherwise falls back to the regular {@code price}.
+     */
     public BigDecimal getEffectivePrice() {
-        return (salePrice != null && salePrice.compareTo(BigDecimal.ZERO) > 0
-                && salePrice.compareTo(price) < 0)
-                ? salePrice : price;
+        return isOnSale() ? salePrice : price;
     }
 
+    /**
+     * Returns {@code true} when a valid sale price is present and lower than
+     * the regular price.
+     */
     public boolean isOnSale() {
-        return salePrice != null && salePrice.compareTo(BigDecimal.ZERO) > 0
+        return salePrice != null
+                && salePrice.compareTo(BigDecimal.ZERO) > 0
                 && salePrice.compareTo(price) < 0;
     }
 
+    /**
+     * Returns a ready-to-use thumbnail URL, or {@code null} if no image is
+     * available. The view layer is responsible for rendering a CSS placeholder
+     * when this returns {@code null}.
+     *
+     * <p>Delegates file-existence resolution to {@link ImageUrlHelper} so that
+     * this model stays free of filesystem and UI concerns (SRP).
+     */
     public String getThumbnailUrl() {
-        if (thumbnailUrl == null || thumbnailUrl.trim().isEmpty()) {
-            return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23f4f6f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23999'>No Image</text></svg>";
-        }
-        if (thumbnailUrl.startsWith("data:")) {
-            return thumbnailUrl;
-        }
-        if (thumbnailUrl.startsWith("/uploads/")) {
-            String fileName = thumbnailUrl.substring(thumbnailUrl.lastIndexOf("/") + 1);
-            if (fileName.equals("books.jpg") || fileName.equals("headphone.jpg") || 
-                fileName.equals("iphone15.jpg") || fileName.equals("iphone15_alt.jpg") || 
-                fileName.equals("jacket.jpg") || fileName.equals("nike.jpg") || 
-                fileName.equals("samsung_s24.jpg") || fileName.equals("watch.jpg") ||
-                fileName.equals(".gitkeep")) {
-                return thumbnailUrl;
-            }
-            try {
-                String userDir = System.getProperty("user.dir");
-                java.io.File[] possiblePaths = {
-                    new java.io.File(userDir, "src/main/webapp" + thumbnailUrl),
-                    new java.io.File(userDir, "target/ECommerceSystem" + thumbnailUrl),
-                    new java.io.File(userDir, "webapps/ROOT" + thumbnailUrl),
-                    new java.io.File(userDir, "webapps/ECommerceSystem" + thumbnailUrl),
-                    new java.io.File(userDir, "work/Catalina/localhost/ECommerceSystem" + thumbnailUrl)
-                };
-                for (java.io.File file : possiblePaths) {
-                    if (file.exists() && file.isFile()) {
-                        return thumbnailUrl;
-                    }
-                }
-            } catch (Exception ignored) {}
-            return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23f4f6f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'>No Image</text></svg>";
-        }
-        return thumbnailUrl;
+        return ImageUrlHelper.resolve(thumbnailUrl);
     }
 }

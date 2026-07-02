@@ -201,7 +201,7 @@ CREATE TABLE order_items (
     order_id         BIGINT        NOT NULL,
     product_id       BIGINT        NOT NULL,
     product_name     VARCHAR(200)  NOT NULL,
-    product_thumbnail VARCHAR(500),
+    product_thumbnail MEDIUMTEXT,
     quantity         INT           NOT NULL,
     unit_price       DECIMAL(15,2) NOT NULL,
     total_price      DECIMAL(15,2) NOT NULL,

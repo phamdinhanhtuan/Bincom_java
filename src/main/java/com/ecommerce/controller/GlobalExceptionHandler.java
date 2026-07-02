@@ -11,42 +11,43 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Centralized exception handling for all controllers.
+ *
+ * <p>Data-binding configuration ({@code @InitBinder}) lives in the companion
+ * class {@link GlobalBindingAdvice} to keep this class focused on a single
+ * concern.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @org.springframework.web.bind.annotation.InitBinder
-    public void initBinder(org.springframework.web.bind.WebDataBinder binder) {
-        // Trim strings and convert empty strings to null
-        binder.registerCustomEditor(String.class, new org.springframework.beans.propertyeditors.StringTrimmerEditor(true));
-        
-        // Convert empty number fields to null instead of throwing TypeMismatchException
-        binder.registerCustomEditor(java.math.BigDecimal.class, 
-            new org.springframework.beans.propertyeditors.CustomNumberEditor(java.math.BigDecimal.class, true));
-        binder.registerCustomEditor(Integer.class, 
-            new org.springframework.beans.propertyeditors.CustomNumberEditor(Integer.class, true));
-        binder.registerCustomEditor(Long.class, 
-            new org.springframework.beans.propertyeditors.CustomNumberEditor(Long.class, true));
-        binder.registerCustomEditor(Double.class, 
-            new org.springframework.beans.propertyeditors.CustomNumberEditor(Double.class, true));
-    }
-
+    /**
+     * Redirects back to the referring page with a user-friendly error message
+     * when the uploaded file exceeds the configured size limit.
+     */
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public String handleMaxSizeException(MaxUploadSizeExceededException exc, 
-                                         RedirectAttributes redirectAttributes, 
-                                         HttpServletRequest request) {
-        redirectAttributes.addFlashAttribute("error", "Kích thước file tải lên vượt quá giới hạn cho phép (tối đa 10MB)!");
+    public String handleMaxUploadSize(MaxUploadSizeExceededException ex,
+                                      RedirectAttributes redirectAttributes,
+                                      HttpServletRequest request) {
+        log.warn("Upload size exceeded: {}", ex.getMessage());
+        redirectAttributes.addFlashAttribute("error",
+                "Kích thước file tải lên vượt quá giới hạn cho phép (tối đa 10MB)!");
+
         String referer = request.getHeader("Referer");
-        if (referer != null && !referer.isEmpty()) {
-            return "redirect:" + referer;
-        }
-        return "redirect:/admin/products";
+        return (referer != null && !referer.isBlank())
+                ? "redirect:" + referer
+                : "redirect:/admin/products";
     }
 
+    /**
+     * Catch-all handler that renders a 500 error view and logs the full
+     * stack trace for diagnostics.
+     */
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleGenericException(Exception ex, HttpServletRequest request) {
-        log.error("Error at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
+    public ModelAndView handleUnexpected(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled error at [{}]: {}", request.getRequestURI(), ex.getMessage(), ex);
         ModelAndView mav = new ModelAndView("error/500");
         mav.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return mav;

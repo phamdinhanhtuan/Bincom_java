@@ -38,7 +38,7 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
                                         <c:if test="${not empty item.productThumbnail}">
-                                            <img src="${pageContext.request.contextPath}${item.productThumbnail}"
+                                            <img src="${item.productThumbnail.startsWith('data:') ? '' : pageContext.request.contextPath}${item.productThumbnail}"
                                                  class="product-thumb" alt="${item.productName}">
                                         </c:if>
                                         <div>

@@ -458,14 +458,19 @@
                 </span>
                 <span class="cps-product-badge-right">Trả góp 0%</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -604,14 +609,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Trả góp 0%</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -682,14 +692,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Màn hình lớn</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -800,14 +815,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Trả góp 0%</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -877,14 +897,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Trả góp 0%</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -994,14 +1019,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Hàng mới về</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -1071,14 +1101,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Hàng tuyển chọn</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -1188,14 +1223,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Hàng tiện ích</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -1265,14 +1305,19 @@
                 </c:if>
                 <span class="cps-product-badge-right">Tiết kiệm điện</span>
                 <c:choose>
+                  <c:when test="${not empty p.thumbnailUrl and p.thumbnailUrl.startsWith('data:')}">
+                    <img src="${p.thumbnailUrl}"
+                         alt="${p.name} — Mua chính hãng tại Bincom"
+                         loading="lazy" width="200" height="200">
+                  </c:when>
                   <c:when test="${not empty p.thumbnailUrl}">
-                    <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                    <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                          alt="${p.name} — Mua chính hãng tại Bincom"
                          loading="lazy" width="200" height="200"
                          onerror="this.src='https://placehold.co/200x200?text=Bincom'">
                   </c:when>
                   <c:otherwise>
-                    <img src="https://placehold.co/200x200?text=${p.name}"
+                    <img src="https://placehold.co/200x200?text=No+Image"
                          alt="${p.name}" loading="lazy" width="200" height="200">
                   </c:otherwise>
                 </c:choose>
@@ -1468,7 +1513,7 @@
             <span class="cps-product-badge-right">Trả góp 0%</span>
             <c:choose>
               <c:when test="${not empty p.thumbnailUrl}">
-                <img src="${pageContext.request.contextPath}${p.thumbnailUrl}"
+                <img src="${p.thumbnailUrl.startsWith('data:') ? '' : pageContext.request.contextPath}${p.thumbnailUrl}"
                      alt="${p.name} — Mua chính hãng tại Bincom"
                      loading="lazy" width="200" height="200"
                      onerror="this.src='https://placehold.co/200x200?text=Bincom'">

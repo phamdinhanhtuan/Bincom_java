@@ -22,12 +22,16 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        // Automatically check and import database if empty on startup
-        try {
-            importDatabaseIfNeeded();
-        } catch (Exception e) {
-            System.err.println("Error seeding database: " + e.getMessage());
-        }
+        // Automatically check and import database if empty on startup in a background thread
+        new Thread(() -> {
+            try {
+                // Wait 2 seconds for Tomcat container startup to complete
+                Thread.sleep(2000);
+                importDatabaseIfNeeded();
+            } catch (Exception e) {
+                System.err.println("Bincom Background Seeder: Error seeding database: " + e.getMessage());
+            }
+        }, "Bincom-DB-Seeder").start();
     }
 
     @Override
@@ -151,6 +155,7 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
                         int columnCount = rsmd.getColumnCount();
 
                         boolean hasData = false;
+                        int rowCount = 0;
                         while (rs.next()) {
                             if (!hasData) {
                                 writer.write("INSERT INTO `" + table + "` VALUES \n");
@@ -176,6 +181,13 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
                                 }
                             }
                             writer.write(")");
+                            
+                            rowCount++;
+                            if (rowCount >= 50) {
+                                writer.write(";\n\n");
+                                hasData = false;
+                                rowCount = 0;
+                            }
                         }
                         if (hasData) {
                             writer.write(";\n\n");

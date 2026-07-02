@@ -71,6 +71,8 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
                     StringBuilder sb = new StringBuilder();
                     String line;
+                    boolean originalAutoCommit = conn.getAutoCommit();
+                    conn.setAutoCommit(false); // Begin transaction
                     try (Statement stmt = conn.createStatement()) {
                         stmt.execute("SET FOREIGN_KEY_CHECKS = 0;");
                         while ((line = reader.readLine()) != null) {
@@ -97,6 +99,12 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
                             }
                         }
                         stmt.execute("SET FOREIGN_KEY_CHECKS = 1;");
+                        conn.commit(); // Commit all statements at once
+                    } catch (Exception ex) {
+                        conn.rollback();
+                        throw ex;
+                    } finally {
+                        conn.setAutoCommit(originalAutoCommit);
                     }
                 }
                 System.out.println("Bincom: Database seed completed successfully.");

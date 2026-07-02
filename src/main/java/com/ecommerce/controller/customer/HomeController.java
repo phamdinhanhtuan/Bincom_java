@@ -43,10 +43,48 @@ public class HomeController {
         return "customer/home";
     }
 
+    @Autowired private javax.sql.DataSource dataSource;
+
     @GetMapping("/health")
     @org.springframework.web.bind.annotation.ResponseBody
     public String health() {
         return "UP";
+    }
+
+    @GetMapping(value = "/db-status", produces = "text/plain;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public String dbStatus() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- Database Connection Status Diagnostics ---\n");
+        sb.append("Current Time: ").append(new java.util.Date()).append("\n\n");
+        
+        try (java.sql.Connection conn = dataSource.getConnection()) {
+            sb.append("Connection: SUCCESS\n");
+            sb.append("Database Product Name: ").append(conn.getMetaData().getDatabaseProductName()).append("\n");
+            sb.append("Database Product Version: ").append(conn.getMetaData().getDatabaseProductVersion()).append("\n");
+            sb.append("Driver Name: ").append(conn.getMetaData().getDriverName()).append("\n");
+            
+            // Check tables
+            String[] tables = {"roles", "users", "categories", "products"};
+            for (String table : tables) {
+                try (java.sql.Statement stmt = conn.createStatement();
+                     java.sql.ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM `" + table + "`")) {
+                    if (rs.next()) {
+                        sb.append("Table `").append(table).append("` count: ").append(rs.getInt(1)).append("\n");
+                    }
+                } catch (Exception ex) {
+                    sb.append("Table `").append(table).append("` error: ").append(ex.getMessage()).append("\n");
+                }
+            }
+        } catch (Exception ex) {
+            sb.append("Connection: FAILED\n");
+            sb.append("Error Message: ").append(ex.getMessage()).append("\n");
+            sb.append("Error Class: ").append(ex.getClass().getName()).append("\n");
+            java.io.StringWriter sw = new java.io.StringWriter();
+            ex.printStackTrace(new java.io.PrintWriter(sw));
+            sb.append("Stack Trace:\n").append(sw.toString()).append("\n");
+        }
+        return sb.toString();
     }
 
     @GetMapping("/about")

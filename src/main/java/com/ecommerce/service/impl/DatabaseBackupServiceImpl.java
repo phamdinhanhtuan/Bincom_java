@@ -37,6 +37,16 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
     @Override
     public synchronized void importDatabaseIfNeeded() {
         boolean forceSeed = "true".equalsIgnoreCase(System.getenv("DB_FORCE_SEED"));
+        try {
+            importDatabase(forceSeed);
+        } catch (Exception e) {
+            System.err.println("Bincom Background Seeder: Error seeding database on startup: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized void importDatabase(boolean forceSeed) throws Exception {
         try (Connection conn = dataSource.getConnection()) {
             // Check if users table exists and has data
             boolean databaseHasData = false;
@@ -109,8 +119,6 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
                 }
                 System.out.println("Bincom: Database seed completed successfully.");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

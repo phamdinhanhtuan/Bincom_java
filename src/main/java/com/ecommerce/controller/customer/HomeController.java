@@ -44,6 +44,7 @@ public class HomeController {
     }
 
     @Autowired private javax.sql.DataSource dataSource;
+    @Autowired private com.ecommerce.service.DatabaseBackupService databaseBackupService;
 
     @GetMapping("/health")
     @org.springframework.web.bind.annotation.ResponseBody
@@ -78,6 +79,29 @@ public class HomeController {
             }
         } catch (Exception ex) {
             sb.append("Connection: FAILED\n");
+            sb.append("Error Message: ").append(ex.getMessage()).append("\n");
+            sb.append("Error Class: ").append(ex.getClass().getName()).append("\n");
+            java.io.StringWriter sw = new java.io.StringWriter();
+            ex.printStackTrace(new java.io.PrintWriter(sw));
+            sb.append("Stack Trace:\n").append(sw.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @GetMapping(value = "/db-seed", produces = "text/plain;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public String dbSeed(@RequestParam(value = "force", defaultValue = "false") boolean force) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- Database Seeding Diagnostics ---\n");
+        sb.append("Requested Force Mode: ").append(force).append("\n");
+        sb.append("Start Time: ").append(new java.util.Date()).append("\n\n");
+        
+        try {
+            databaseBackupService.importDatabase(force);
+            sb.append("Seeding status: SUCCESS\n");
+            sb.append("All tables re-seeded/initialized successfully from database_setup.sql!\n");
+        } catch (Exception ex) {
+            sb.append("Seeding status: FAILED\n");
             sb.append("Error Message: ").append(ex.getMessage()).append("\n");
             sb.append("Error Class: ").append(ex.getClass().getName()).append("\n");
             java.io.StringWriter sw = new java.io.StringWriter();

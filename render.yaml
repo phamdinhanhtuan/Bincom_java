@@ -12,3 +12,5 @@ services:
         sync: false
       - key: DB_FORCE_SEED
         value: "false"
+      - key: HIBERNATE_HBM2DDL_AUTO
+        value: "none"

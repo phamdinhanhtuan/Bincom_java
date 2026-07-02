@@ -10,3 +10,5 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: DB_FORCE_SEED
+        value: "false"

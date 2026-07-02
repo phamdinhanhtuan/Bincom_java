@@ -32,21 +32,28 @@ public class DatabaseBackupServiceImpl implements DatabaseBackupService, org.spr
 
     @Override
     public synchronized void importDatabaseIfNeeded() {
+        boolean forceSeed = "true".equalsIgnoreCase(System.getenv("DB_FORCE_SEED"));
         try (Connection conn = dataSource.getConnection()) {
             // Check if users table exists and has data
             boolean databaseHasData = false;
-            try (Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users")) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    databaseHasData = true;
+            if (!forceSeed) {
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users")) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        databaseHasData = true;
+                    }
+                } catch (SQLException e) {
+                    // Table doesn't exist yet, which is expected on initial setup
                 }
-            } catch (SQLException e) {
-                // Table doesn't exist yet, which is expected on initial setup
             }
 
             if (databaseHasData) {
                 System.out.println("Bincom: Database already has data. Skipping import.");
                 return;
+            }
+
+            if (forceSeed) {
+                System.out.println("Bincom: DB_FORCE_SEED is true. Forcing database re-seed...");
             }
 
             try (InputStream is = getBackupInputStream()) {

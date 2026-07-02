@@ -19,10 +19,17 @@ public class HomeController {
 
     @GetMapping({"/", "/home", "/index.jsp"})
     public String home(Model model) {
-        // Data attributes
-        model.addAttribute("featuredProducts", productService.findFeaturedProducts(30));
-        model.addAttribute("latestProducts",   productService.findLatestProducts(30));
-        model.addAttribute("categories",       categoryService.findActiveCategories());
+        try {
+            model.addAttribute("featuredProducts", productService.findFeaturedProducts(30));
+            model.addAttribute("latestProducts",   productService.findLatestProducts(30));
+            model.addAttribute("categories",       categoryService.findActiveCategories());
+        } catch (Exception e) {
+            System.err.println("Bincom Home: Database connectivity issue. Falling back to empty model. Error: " + e.getMessage());
+            model.addAttribute("featuredProducts", new java.util.ArrayList<>());
+            model.addAttribute("latestProducts",   new java.util.ArrayList<>());
+            model.addAttribute("categories",       new java.util.ArrayList<>());
+            model.addAttribute("dbError", "Hệ thống đang bảo trì kết nối cơ sở dữ liệu. Vui lòng quay lại sau.");
+        }
 
         // SEO attributes (required by customer-header.jsp)
         model.addAttribute("pageTitle",
@@ -34,6 +41,12 @@ public class HomeController {
             "bincom, điện thoại chính hãng, mua iphone giá tốt, samsung galaxy, " +
             "laptop giá rẻ, thời trang online, đồ gia dụng thông minh");
         return "customer/home";
+    }
+
+    @GetMapping("/health")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public String health() {
+        return "UP";
     }
 
     @GetMapping("/about")

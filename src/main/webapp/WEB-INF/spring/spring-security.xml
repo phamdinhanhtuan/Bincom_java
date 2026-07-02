@@ -73,6 +73,7 @@
         <intercept-url pattern="/home"     access="permitAll"/>
         <intercept-url pattern="/"         access="permitAll"/>
         <intercept-url pattern="/index.jsp" access="permitAll"/>
+        <intercept-url pattern="/health"    access="permitAll"/>
         <intercept-url pattern="/shop/**"  access="permitAll"/>
         <intercept-url pattern="/product/**" access="permitAll"/>
         <intercept-url pattern="/tracking" access="permitAll"/>

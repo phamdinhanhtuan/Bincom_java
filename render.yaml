@@ -14,3 +14,5 @@ services:
         value: "false"
       - key: HIBERNATE_HBM2DDL_AUTO
         value: "none"
+      - key: DB_CONNECTION_TIMEOUT
+        value: "5000"

@@ -31,7 +31,7 @@
         <property name="password"        value="${db.password}"/>
         <property name="maximumPoolSize" value="3"/>
         <property name="minimumIdle"     value="1"/>
-        <property name="connectionTimeout" value="30000"/>
+        <property name="connectionTimeout" value="${DB_CONNECTION_TIMEOUT:5000}"/>
         <property name="idleTimeout"     value="600000"/>
         <property name="maxLifetime"     value="1800000"/>
         <property name="leakDetectionThreshold" value="30000"/>
